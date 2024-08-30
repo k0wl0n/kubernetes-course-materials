@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: alpine-cm-two
+data:
+  script.sh: |
+    echo "hello from configmap two"

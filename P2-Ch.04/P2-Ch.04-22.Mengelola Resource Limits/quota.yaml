@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: rs-quota
+  namespace: quota
+spec:
+  hard:
+    pods: "20"
+    requests.cpu: "2"
+    requests.memory: "1024Mi"
+    limits.cpu: "4"
+    limits.memory: "2048Mi"

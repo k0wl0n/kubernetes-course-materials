@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: cm-pod
+spec:
+  containers:
+  - name: go-echo
+    image: kowlon/go-echo:v3
+    envFrom:
+    - configMapRef:
+        name: config-env

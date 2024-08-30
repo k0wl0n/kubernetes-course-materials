@@ -1,0 +1,16 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: failure-handling-job
+spec:
+  schedule: "* * * * *"  # Runs every 1 minute
+  jobTemplate:
+    spec:
+      backoffLimit: 3  # Retries 3 times on failure
+      template:
+        spec:
+          containers:
+          - name: job-task
+            image: busybox
+            command: ["sh", "-c", "exit 1"]  # Simulates a failure
+          restartPolicy: Never

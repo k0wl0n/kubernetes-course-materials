@@ -1,0 +1,16 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: timezone-job-korea
+spec:
+  schedule: "* * * * *"  # Runs every 1 minute
+  timeZone: "Asia/Seoul"  # Specific timezone for seoul
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: job-task-korea
+            image: alpine
+            command: ["sh", "-c", "apk add --no-cache tzdata && cp /usr/share/zoneinfo/Asia/Seoul /etc/localtime && date; echo Hello from CronJob in Seoul timezone"]
+          restartPolicy: Never

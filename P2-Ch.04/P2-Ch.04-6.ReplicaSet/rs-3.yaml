@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: rs-webserver-volume
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: rs-webserver-volume
+  template:
+    metadata:
+      labels:
+        app: rs-webserver-volume
+    spec:
+      containers:
+      - name: advanced-container
+        image: nginx:alpine
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: html-volume
+          mountPath: /usr/share/nginx/html
+      volumes:
+      - name: html-volume
+        configMap:
+          name: html-configmap
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: html-configmap
+data:
+  index.html: |
+    <html>
+    <head>
+      <title>Welcome to nginx!</title>
+    </head>
+    <body>
+      <h1>Hello, fastcampus! 2</h1>
+    </body>
+    </html>
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: webserver-volume-service
+spec:
+  selector:
+    app: rs-webserver-volume
+  ports:
+    - protocol: TCP
+      port: 8081
+      targetPort: 80
+  type: LoadBalancer

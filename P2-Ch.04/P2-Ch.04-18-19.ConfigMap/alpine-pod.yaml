@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: alpine-pod-cm
+spec:
+  containers:
+  - name: alpine
+    image: alpine
+    envFrom:
+    - configMapRef:
+        name: config-env
+    command: ["/bin/sh", "-c", "sh /etc/config/alpine-cm-script.sh; tail -f /dev/null"]
+    volumeMounts:
+    - name: config-volume-one
+      mountPath: /etc/config/alpine-cm-app.properties
+      subPath: app.properties
+    - name: config-volume-two
+      mountPath: /etc/config/alpine-cm-script.sh
+      subPath: script.sh
+  volumes:
+  - name: config-volume-one
+    configMap:
+      name: alpine-cm-one
+  - name: config-volume-two
+    configMap:
+      name: alpine-cm-two

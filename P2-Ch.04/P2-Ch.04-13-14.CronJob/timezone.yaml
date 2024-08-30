@@ -1,0 +1,19 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: timezone-job
+spec:
+  schedule: "* * * * *"  # Runs every 1 minute
+  timeZone: "Asia/Jakarta"  # Specific timezone for Jakarta
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: job-task
+            image: alpine
+            command: ["sh", "-c", "apk add --no-cache tzdata && 
+            cp /usr/share/zoneinfo/Asia/Jakarta /etc/localtime && 
+            date; 
+            echo Hello from CronJob in Jakarta timezone"]
+          restartPolicy: Never

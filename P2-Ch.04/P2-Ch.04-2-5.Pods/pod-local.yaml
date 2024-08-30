@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod-go-echo
+  labels:
+    app: go-echo
+    env: staging
+spec:
+  containers:
+  - name: go-echo
+    image: kowlon/go-echo:v1
+    ports:
+    - containerPort: 8080
+    resources:
+        requests:
+          cpu: "10m"
+          memory: "32Mi"
+        limits:
+          cpu: "100m"
+          memory: "128Mi"

@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: alpine-cm-one
+data:
+  app.properties: |
+    APP_COLOR=blue
+    APP_MODE=production

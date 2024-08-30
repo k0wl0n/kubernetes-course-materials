@@ -1,0 +1,13 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: ttl-job-example
+spec:
+  ttlSecondsAfterFinished: 40  # The Job will be deleted 40 seconds after completion
+  template:
+    spec:
+      containers:
+      - name: ttl-task
+        image: busybox
+        command: ["sh", "-c", "echo Job completed; sleep 30"]
+      restartPolicy: Never

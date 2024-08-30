@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: webserver-pod
+spec:
+  containers:
+    - name: nginx
+      image: nginx
+      resources:
+        requests:
+          cpu: "10m"
+          memory: "32Mi"
+        limits:
+          cpu: "100m"
+          memory: "128Mi"
+      volumeMounts:
+        - mountPath: "/usr/share/nginx/html"
+          name: webserver-volume
+  volumes:
+    - name: webserver-volume
+      persistentVolumeClaim:
+        claimName: webserver-pvc

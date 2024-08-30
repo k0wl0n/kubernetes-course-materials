@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ddosify
+  labels:
+    app: ddosify
+spec:
+  containers:
+  - name: ddosify
+    image: ddosify/ddosify:v1.0.6
+    command: ["ddosify","-d","60","-t","http://go-echo-service.default.svc.cluster.local/"]

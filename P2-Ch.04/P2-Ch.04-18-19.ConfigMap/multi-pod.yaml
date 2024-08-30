@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: multi-pod
+spec:
+  containers:
+  - name: alpine
+    image: alpine
+    command: ["/bin/sh", "-c", "cat /app/config/app.properties; cat /app/config/db.properties; tail -f /dev/null"]
+    volumeMounts:
+    - name: config-volume
+      mountPath: /app/config/app.properties
+      subPath: app.properties
+    - name: config-volume
+      mountPath: /app/config/db.properties
+      subPath: db.properties
+  volumes:
+  - name: config-volume
+    configMap:
+      name: multi-cm

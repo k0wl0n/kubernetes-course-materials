@@ -1,0 +1,24 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: volume-job
+spec:
+  template:
+    spec:
+      containers:
+      - name: file-writer
+        image: busybox
+        command: ["sh", "-c", "for i in $(seq 1 10); do date | tee /mnt/data/$(date +%s).txt; sleep 1; done"]
+        volumeMounts:
+        - name: data-volume
+          mountPath: /mnt/data
+      - name: file-lister
+        image: busybox
+        command: ["sh", "-c", "sleep 15; ls /mnt/data; ls /mnt/data | wc -l"]
+        volumeMounts:
+        - name: data-volume
+          mountPath: /mnt/data
+      volumes:
+      - name: data-volume
+        emptyDir: {}
+      restartPolicy: Never

@@ -1,0 +1,14 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: parallel-job
+spec:
+  parallelism: 3
+  completions: 3
+  template:
+    spec:
+      containers:
+      - name: parallel-task
+        image: busybox
+        command: ["sh", "-c", "echo Job $((RANDOM % 100)) completed"]
+      restartPolicy: Never

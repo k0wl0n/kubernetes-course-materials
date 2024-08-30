@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: daemon-fluentd
+spec:
+  selector:
+    matchLabels:
+      name: daemon-fluentd
+  template:
+    metadata:
+      labels:
+        name: daemon-fluentd
+    spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 1
+              preference:
+                matchExpressions:
+                  - key: node_type
+                    operator: In
+                    values:
+                      - gpu
+          # requiredDuringSchedulingIgnoredDuringExecution:
+          #   nodeSelectorTerms:
+          #   - matchExpressions:
+          #     - key: node_type
+          #       operator: In
+          #       values:
+          #       - standart
+      containers:
+        - name: fluentd-elasticsearch
+          image: quay.io/fluentd_elasticsearch/fluentd:latest

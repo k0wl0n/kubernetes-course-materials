@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: affinity-nvme-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: app-nvme
+  template:
+    metadata:
+      labels:
+        app: app-nvme
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: disktype
+                operator: In
+                values:
+                - nvme
+      containers:
+      - name: my-container
+        image: kowlon/go-echo:v2
+        ports:
+        - containerPort: 8080

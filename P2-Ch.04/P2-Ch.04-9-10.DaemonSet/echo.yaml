@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: daemon-go-echo
+  labels:
+    name: daemon-go-echo
+spec:
+  selector:
+    matchLabels:
+      name: daemon-go-echo
+  template:
+    metadata:
+      name: daemon-go-echo
+      labels:
+        name: daemon-go-echo
+    spec:
+      containers:
+        - name: go-echo
+          image: kowlon/go-echo:v2
+          ports:
+            - containerPort: 8080
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8080
+            initialDelaySeconds: 0
+            periodSeconds: 10
+            failureThreshold: 3
+            successThreshold: 1
+            timeoutSeconds: 1

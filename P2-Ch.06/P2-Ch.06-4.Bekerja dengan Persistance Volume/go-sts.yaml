@@ -1,0 +1,52 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: go-echo-stateful-volume
+spec:
+  accessModes:
+    - ReadWriteOnce
+  capacity:
+    storage: 10Mi
+  hostPath:
+    path: /data/location
+
+---
+
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: go-echo-stateful
+  labels:
+    name: go-echo-stateful
+spec:
+  serviceName: go-echo-stateful-service
+  replicas: 3
+  selector:
+    matchLabels:
+      name: go-echo-stateful
+  template:
+    metadata:
+      labels:
+        name: go-echo-stateful
+    spec:
+      containers:
+      - name: go-echo-stateful
+        image: kowlon/go-echo:v2
+        env:
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        volumeMounts:
+        - name: go-echo-stateful-volume-claim
+          mountPath: /app/data
+  volumeClaimTemplates:
+  - metadata:
+      name: go-echo-stateful-volume-claim
+    spec:
+      accessModes:
+        - ReadWriteOnce
+      resources:
+        requests:
+          storage: 10Mi
+

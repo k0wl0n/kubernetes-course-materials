@@ -1,0 +1,16 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: ttl-cleanup-job
+spec:
+  schedule: "0 0 * * *"  # Runs daily at midnight
+  jobTemplate:
+    spec:
+      ttlSecondsAfterFinished: 600  # Job will be deleted 10 minutes after completion
+      template:
+        spec:
+          containers:
+          - name: job-task
+            image: busybox
+            command: ["sh", "-c", "date; echo Job will be cleaned up after 10 minutes"]
+          restartPolicy: Never

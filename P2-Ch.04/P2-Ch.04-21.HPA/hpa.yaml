@@ -1,0 +1,58 @@
+# Horizontal Pod Autoscaling
+kind: HorizontalPodAutoscaler
+apiVersion: autoscaling/v2
+metadata:
+  name: resource-pressure-hpa
+  namespace: default
+spec:
+  minReplicas: 1
+  maxReplicas: 10
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: resource-pressure
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 80
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 80
+---
+# Sample Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: resource-pressure
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: resource-pressure
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: resource-pressure
+        version: v1
+    spec:
+      containers:
+      - image: kowlon/preasure:v1
+        imagePullPolicy: IfNotPresent
+        name: resource-pressure
+        env:
+        - name: NUM_THREADS
+          value: "5"
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "200Mi"
+          limits:
+            cpu: "300m"
+            memory: "512Mi"

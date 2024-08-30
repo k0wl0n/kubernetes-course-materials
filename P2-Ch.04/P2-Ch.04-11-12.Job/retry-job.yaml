@@ -1,0 +1,13 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: backofflimit-job
+spec:
+  backoffLimit: 3  # Retry up to 3 times on failure
+  template:
+    spec:
+      containers:
+      - name: retry-task
+        image: busybox
+        command: ["sh", "-c", "exit 1"]
+      restartPolicy: Never
