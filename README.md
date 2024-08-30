@@ -1,6 +1,3 @@
-To update your `README` file based on the current folder structure, you can modify the content under the "Chapters and Topics" section to match your updated directory structure. Here's an updated version of your `README` that reflects the latest structure:
-
-```markdown
 # Kubernetes Manifest Repository
 
 This repository contains Kubernetes manifests organized by chapter and topics to support learning and understanding of various Kubernetes features and concepts. Each directory contains specific examples and configurations related to the chapter topics.
@@ -93,6 +90,3 @@ This repository is licensed under the MIT License. See the `LICENSE` file for mo
 ## Contact
 
 For questions or discussions, please open an issue or reach out via this repo.
-```
-
-Make sure to update any other sections or descriptions in the `README` to align with the changes in your repository structure.
