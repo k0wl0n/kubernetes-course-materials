@@ -1,3 +1,6 @@
+To update your `README` file based on the current folder structure, you can modify the content under the "Chapters and Topics" section to match your updated directory structure. Here's an updated version of your `README` that reflects the latest structure:
+
+```markdown
 # Kubernetes Manifest Repository
 
 This repository contains Kubernetes manifests organized by chapter and topics to support learning and understanding of various Kubernetes features and concepts. Each directory contains specific examples and configurations related to the chapter topics.
@@ -37,21 +40,21 @@ The repository is organized into several chapters, each focusing on different as
   - `go-echo-v3`: Third version with additional features.
 
 ### P2-Ch.04
-- **P2-Ch.04-10-11.Deployment**: Managing Deployments.
+- **P2-Ch.04-2-5.Pods**: Basic pod management and configuration.
+- **P2-Ch.04-6.ReplicaSet**: Ensuring the availability of pod replicas.
+- **P2-Ch.04-7-8.Deployment**: Managing Deployments.
   - `go-echo-v3`: Example Deployment using the `go-echo-v3` app.
-- **P2-Ch.04-12-13.DaemonSet**: Configuration and use cases for DaemonSets.
-- **P2-Ch.04-14-15.Job**: Running batch Jobs in Kubernetes.
-- **P2-Ch.04-16-17.CronJob**: Scheduling recurring tasks using CronJobs.
-- **P2-Ch.04-18-19.Statefulset**: Managing stateful applications with StatefulSets.
-- **P2-Ch.04-20.RolloutRollback**: Rollout and rollback strategies.
+- **P2-Ch.04-9-10.DaemonSet**: Configuration and use cases for DaemonSets.
+- **P2-Ch.04-11-12.Job**: Running batch Jobs in Kubernetes.
+- **P2-Ch.04-13-14.CronJob**: Scheduling recurring tasks using CronJobs.
+- **P2-Ch.04-15-16.Statefulset**: Managing stateful applications with StatefulSets.
+- **P2-Ch.04-17.RolloutRollback**: Rollout and rollback strategies.
   - `go-echo-v4`: Example for demonstrating rollout and rollback.
-- **P2-Ch.04-21-22.ConfigMap**: Using ConfigMaps to manage configuration data.
-- **P2-Ch.04-23.Secret**: Storing and managing sensitive information with Secrets.
-- **P2-Ch.04-24.HPA**: Horizontal Pod Autoscaling for workload management.
-- **P2-Ch.04-25.Mengelola Resource Limits**: Managing resource limits for pods.
-- **P2-Ch.04-26.Pengelolaan Scheduling Pod**: Advanced pod scheduling techniques.
-- **P2-Ch.04-5-8.Pods**: Basic pod management and configuration.
-- **P2-Ch.04-9.ReplicaSet**: Ensuring the availability of pod replicas.
+- **P2-Ch.04-18-19.ConfigMap**: Using ConfigMaps to manage configuration data.
+- **P2-Ch.04-20.Secret**: Storing and managing sensitive information with Secrets.
+- **P2-Ch.04-21.HPA**: Horizontal Pod Autoscaling for workload management.
+- **P2-Ch.04-22.Mengelola Resource Limits**: Managing resource limits for pods.
+- **P2-Ch.04-23.Pengelolaan Scheduling Pod**: Advanced pod scheduling techniques.
 
 ### P2-Ch.05
 - **P2-Ch.05-1.Memahami Konektivitas Pod**: Understanding pod connectivity.
@@ -61,9 +64,8 @@ The repository is organized into several chapters, each focusing on different as
 - **P2-Ch.05-5.Pengenalan Pengendali Ingress**: Introduction to Ingress controllers.
 
 ### P2-Ch.06
-- **P2-Ch.06-1.Memahami Kelas Penyimpanan**: Understanding storage classes in Kubernetes.
-- **P2-Ch.06-2.Bekerja dengan Volume Persisten**: Working with persistent volumes.
-- **P2-Ch.06-4.Bekerja dengan StatefulSets**: Managing persistent state with StatefulSets.
+- **P2-Ch.06-2.Mengkonfigurasi Storage Class**: Configuring storage classes in Kubernetes.
+- **P2-Ch.06-4.Bekerja dengan Persistance Volume**: Working with persistent volumes.
 
 ## How to Use This Repository
 
@@ -74,7 +76,7 @@ The repository is organized into several chapters, each focusing on different as
 
 2. **Navigate to the desired chapter and sub-chapter to explore the examples and manifests:**
     ```bash
-    cd kubernetes-manifest/P2-Ch.04/P2-Ch.04-10-11.Deployment
+    cd kubernetes-manifest/P2-Ch.04/P2-Ch.04-2-5.Pods
     ```
 
 3. **Apply the Kubernetes manifests using `kubectl`:**
@@ -91,3 +93,6 @@ This repository is licensed under the MIT License. See the `LICENSE` file for mo
 ## Contact
 
 For questions or discussions, please open an issue or reach out via this repo.
+```
+
+Make sure to update any other sections or descriptions in the `README` to align with the changes in your repository structure.
