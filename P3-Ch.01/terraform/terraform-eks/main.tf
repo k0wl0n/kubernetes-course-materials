@@ -21,6 +21,13 @@ module "eks" {
   subnet_ids               = module.vpc.private_subnets
   control_plane_subnet_ids = module.vpc.private_subnets
 
+  node_security_group_tags = {
+    "kubernetes.io/cluster/${local.name}" = null
+  }
+
+  # https://github.com/terraform-aws-modules/terraform-aws-eks/issues/1986 
+  # https://github.com/terraform-aws-modules/terraform-aws-eks/issues/1810
+
   # EKS Managed Node Group(s)
   eks_managed_node_group_defaults = {
     ami_type       = "AL2_x86_64"
