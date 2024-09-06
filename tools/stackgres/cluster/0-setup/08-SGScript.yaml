@@ -1,0 +1,18 @@
+apiVersion: stackgres.io/v1
+kind: SGScript
+metadata:
+  name: create-db-script
+  namespace: postgresql
+spec:
+  managedVersions: true
+  continueOnError: false
+  scripts:
+  - name: create-database
+    script: |
+      CREATE DATABASE users_db WITH OWNER postgres;
+      CREATE DATABASE products_db WITH OWNER postgres;
+      CREATE DATABASE orders_db WITH OWNER postgres;
+
+      
+
+
