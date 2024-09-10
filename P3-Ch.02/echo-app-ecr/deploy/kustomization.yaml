@@ -1,0 +1,10 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+- deployment.yaml
+- service.yaml
+namespace: staging
+images:
+- name: kowlon/go-echo
+  newName: 490004610217.dkr.ecr.ap-southeast-1.amazonaws.com/echo-app-cicd
+  newTag: stg-v.0.0.1

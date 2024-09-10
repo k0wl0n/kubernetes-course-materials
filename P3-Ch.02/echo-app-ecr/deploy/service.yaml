@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: go-echo
+spec:
+  selector:
+    app: go-echo
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
