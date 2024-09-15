@@ -1,91 +1,110 @@
-# Overview of the stack
+# Overview of the Stack
 
-## prequisite
+## Prerequisites
 
-Credentials with admin role
-    * AWS IAM access_key 
-    * AWS IAM secret_key 
+- **Credentials with admin role**:
+  - AWS IAM `access_key`
+  - AWS IAM `secret_key`
 
-Recommended for windows to install WSL 2
-    * https://learn.microsoft.com/en-us/windows/wsl/install
-    * can follow this step https://www.youtube.com/watch?v=vxTW22y8zV8
+- **Recommended for Windows**:
+  - Install [WSL 2](https://learn.microsoft.com/en-us/windows/wsl/install) (You can follow [this guide](https://www.youtube.com/watch?v=vxTW22y8zV8))
 
-Tools for provisioning and run the project
-    package manager
-    * windows
-        * choco
-    * macOs or linux
-        * brew
+## Tools for Provisioning and Project Setup
 
-    kubernetes
-    * kubectl
-    * kubectx
-    * kubens
-    * k9s (recommended for k8s operational)
+### Package Managers
+- **Windows**: [Chocolatey](https://chocolatey.org/)
+- **macOS/Linux**: [Homebrew](https://brew.sh/)
 
-    provisioning
-    * terraform
-    * helm
-    * kustomize
+### Kubernetes
+- `kubectl`
+- `kubectx`
+- `kubens`
+- [`k9s`](https://k9scli.io/) (recommended for k8s operations)
 
-    development
-    * golang
-    * vscode
-    * goose
-    * sqlc
-    * psql or dbeaver ( db client )
+### Provisioning
+- [Terraform](https://www.terraform.io/)
+- [Helm](https://helm.sh/)
+- [Kustomize](https://kustomize.io/)
 
-production cluster kubernetes high availability
-    * setup production eks kubernetes cluster on AWS using terraform
-        * Create s3 bucket and dynamoDB state lock
-            * P4-Ch.01/eks-cluster-bucket
-        * Create cluster kubernetes
-            * P4-Ch.01/eks-cluster-production
-    * setup istio 
-        * P4-Ch.01/istio/README.MD
-    * setup argoCD
-        * P4-Ch.01/argocd/README.md
-    * setup vault
+### Development
+- [Golang](https://go.dev/)
+- [Visual Studio Code](https://code.visualstudio.com/)
+- [Goose](https://github.com/pressly/goose) (DB migration tool)
+- [SQLC](https://sqlc.dev/) (Go code generation from SQL queries)
+- `psql` or [DBeaver](https://dbeaver.io/) (DB client)
 
-production CICD
-    * Create Github Repository
-        * Repository for user_service
-        * Repository for product_service
-        * Repository for order_service
-    * Create monorepo-gitops
-    * Setup CICD for Service user_service
-        * Containerizing user_service
-        * Creating Kubernetes Manifests user_service
-        * Create ECR for user_service
-    * Setup CICD for Service product_service
-        * Containerizing product_service
-        * Creating Kubernetes Manifests product_service
-        * Create ECR for product_service
-    * Setup CICD for Service order_service
-        * Containerizing order_service
-        * Creating Kubernetes Manifests order_service
-        * Create ECR for order_service
-    * Setup postgresql operator
-        * setup postgresql database for user_service
-        * setup postgresql database for product_service
-        * setup postgresql database for order_service
-    * Setup redis operator
-        * setup redis for user_service
-        * setup redis for product_service
-        * setup redis for order_service
-    
+## Production Kubernetes Cluster (High Availability)
 
-production monitoring cluster
-    * install logging/loki
-    * install logging/promtail
-    * install metrics/exporter/node_exporter
-    * install metrics/exporter/kube-state-metrics
-    * install metrics/vmcluster
-    * install metrics/vmagent
-    * Install visualize/grafana
-        * setup grafana datasource loki and vmselect
-        * add example dashboard metrics grafana
-        * check logging on grafana explore menu
-    * setup jaeger tracing/jeager
-        * check jaeger UI
-    * install alert/vmalert
+1. **Setup Production EKS Kubernetes Cluster on AWS using Terraform**:
+    - **Create S3 bucket and DynamoDB state lock**:
+        - Path: `P4-Ch.01/eks-cluster-bucket`
+    - **Create EKS cluster**:
+        - Path: `P4-Ch.01/eks-cluster-production`
+
+2. **Setup Istio**:
+    - Path: `P4-Ch.01/istio/README.MD`
+
+3. **Setup ArgoCD**:
+    - Path: `P4-Ch.01/argocd/README.md`
+
+4. **Setup Vault**:
+    - Configure as required
+
+## Production CI/CD
+
+1. **Create GitHub Repositories**:
+    - Repository for `user_service`
+    - Repository for `product_service`
+    - Repository for `order_service`
+    - Monorepo for GitOps
+
+2. **Setup CI/CD for Services**:
+    - **User Service**:
+        - Containerize `user_service`
+        - Create Kubernetes manifests
+        - Create ECR for `user_service`
+    - **Product Service**:
+        - Containerize `product_service`
+        - Create Kubernetes manifests
+        - Create ECR for `product_service`
+    - **Order Service**:
+        - Containerize `order_service`
+        - Create Kubernetes manifests
+        - Create ECR for `order_service`
+
+3. **Setup PostgreSQL Operator**:
+    - Setup PostgreSQL databases for:
+        - `user_service`
+        - `product_service`
+        - `order_service`
+
+4. **Setup Redis Operator**:
+    - Setup Redis for:
+        - `user_service`
+        - `product_service`
+        - `order_service`
+
+## Production Monitoring Cluster
+
+1. **Logging**:
+    - Install Loki
+    - Install Promtail
+
+2. **Metrics**:
+    - Install `node_exporter`
+    - Install `kube-state-metrics`
+    - Install VMCluster (VictoriaMetrics)
+    - Install VMAgent
+
+3. **Visualization**:
+    - Install Grafana
+        - Setup Grafana datasources for Loki and VMSelect
+        - Add example Grafana dashboards
+        - Check logs via Grafana Explore
+
+4. **Tracing**:
+    - Setup Jaeger
+        - Check Jaeger UI
+
+5. **Alerting**:
+    - Install VMAlert
