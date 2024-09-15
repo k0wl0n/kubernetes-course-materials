@@ -37,7 +37,7 @@ insert 3 unseal key
 
 ## setup root token
 
-export VAULT_TOKEN=<vault-token>
+export VAULT_TOKEN
 export VAULT_ADDRESS=localhost:8200  
 
 
@@ -63,7 +63,7 @@ vault secrets enable -path=internal kv-v2
 ```
 <<K9s-Shell>> Pod: vault/hashicorp-vault-0 | Container: vault
 
-/ $ export VAULT_TOKEN=<vault-token>
+/ $ export VAULT_TOKEN
 / $ vault secrets enable -path=internal kv-v2
 Success! Enabled the kv-v2 secrets engine at: internal/
 / $ vault kv put internal/production/ecommerce-user \
