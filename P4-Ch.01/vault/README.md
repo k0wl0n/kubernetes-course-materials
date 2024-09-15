@@ -37,7 +37,7 @@ insert 3 unseal key
 
 ## setup root token
 
-export VAULT_TOKEN=<root-token> #Initial Root Token
+export VAULT_TOKEN=<vault-token>
 export VAULT_ADDRESS=localhost:8200  
 
 
@@ -50,7 +50,7 @@ vault secrets enable -path=internal kv-v2
 ```vault kv put internal/production/ecommerce-user \
   ACCESS_TOKEN_EXP="7" \
   CGO_ENABLED="1" \
-  DB_URL="postgres://db_super:RXxCqLaPrkHVlm8dx5YwE6v@postgresql-user-service.postgresql.svc.cluster.local:5432/users_db?sslmode=disable" \
+  DB_URL="postgres://db_super:asdas@<db-address>" \
   GIN_MODE="debug" \
   INTERNAL_API_SECRET="1234_secret_4321" \
   PORT="8080" \
@@ -63,13 +63,13 @@ vault secrets enable -path=internal kv-v2
 ```
 <<K9s-Shell>> Pod: vault/hashicorp-vault-0 | Container: vault
 
-/ $ export VAULT_TOKEN=hvs.LbuyOzsICHZ1dNfARMfb6kCH
+/ $ export VAULT_TOKEN=<vault-token>
 / $ vault secrets enable -path=internal kv-v2
 Success! Enabled the kv-v2 secrets engine at: internal/
 / $ vault kv put internal/production/ecommerce-user \
 >   ACCESS_TOKEN_EXP="7" \
 >   CGO_ENABLED="1" \
->   DB_URL="postgres://db_super:RXxCqLaPrkHVlm8dx5YwE6v@postgresql-user-service.postgresql.svc.cluster.local:5432/users_db?sslmode=disable" \
+>   DB_URL="postgres://db_super:asdas@<db-address>" \
 >   GIN_MODE="debug" \
 >   INTERNAL_API_SECRET="1234_secret_4321" \
 >   PORT="8080" \
