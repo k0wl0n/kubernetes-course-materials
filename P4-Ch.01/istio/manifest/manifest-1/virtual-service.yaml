@@ -1,0 +1,21 @@
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: echo1
+  namespace: production
+spec:
+  hosts:
+    - echo1.apps.kowlon.my.id
+    - echo1
+  gateways:
+    - apps
+  http:
+    - match: 
+        - uri:
+            prefix: /  
+      route:
+        - destination:
+            port:
+              number: 8080
+            host: echo1

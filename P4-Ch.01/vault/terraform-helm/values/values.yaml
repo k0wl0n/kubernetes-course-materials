@@ -1,0 +1,28 @@
+server:
+  standalone:
+    enabled: true
+  ha:
+    enabled: false
+  readinessProbe:
+    enabled: false
+  livenessProbe:
+    enabled: false
+
+global:
+  enabled: true
+  namespace: vault
+
+ui:
+  enabled: true
+  publishNotReadyAddresses: true
+  # The service should only contain selectors for active Vault pod
+  activeVaultPodOnly: false
+  serviceType: "ClusterIP"
+  serviceNodePort: null
+  externalPort: 8200
+  targetPort: 8200
+
+persistence:
+  enabled: true
+  accessMode: ReadWriteOnce
+  size: 1Gi

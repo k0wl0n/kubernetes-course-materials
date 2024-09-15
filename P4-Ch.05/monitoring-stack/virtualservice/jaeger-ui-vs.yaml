@@ -1,0 +1,19 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: jaeger
+  namespace: monitoring
+spec:
+  hosts:
+    - jaeger.apps.kowlon.my.id
+  gateways:
+    - production/apps
+  http:
+    - match: 
+        - uri:   
+            prefix: /  
+      route:
+        - destination:
+            port:
+              number: 16686
+            host: jaeger-query

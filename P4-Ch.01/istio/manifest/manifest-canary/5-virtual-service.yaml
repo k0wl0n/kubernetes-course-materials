@@ -1,0 +1,25 @@
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: second-app
+  namespace: production
+spec:
+  hosts:
+    - second-app.apps.kowlon.my.id #change based on you domain
+    - second-app
+  gateways:
+    - apps
+  http:
+    - match:
+        - uri:
+            prefix: /
+      route:
+        - destination:
+            host: second-app
+            subset: v1
+          weight: 20
+        - destination:
+            host: second-app
+            subset: v2
+          weight: 80

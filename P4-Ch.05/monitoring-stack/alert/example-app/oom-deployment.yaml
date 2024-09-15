@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: oom-demo-deployment
+  labels:
+    app: oom-demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: oom-demo
+  template:
+    metadata:
+      labels:
+        app: oom-demo
+    spec:
+      containers:
+      - name: oom-demo
+        image: python:3.9-alpine  # A small Python image based on Alpine
+        resources:
+          limits:
+            memory: "64Mi"  # Set a low memory limit
+        command: ["python3", "-c", "a = ' ' * 100 * 1024 * 1024; print('Allocated memory!')"]  # Python command that allocates 100MB

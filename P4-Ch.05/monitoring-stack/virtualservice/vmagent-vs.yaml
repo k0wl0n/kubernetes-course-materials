@@ -1,0 +1,19 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: vmagent
+  namespace: monitoring
+spec:
+  hosts:
+    - vmagent.apps.kowlon.my.id
+  gateways:
+    - production/apps
+  http:
+    - match:
+        - uri:
+            prefix: /
+      route:
+        - destination:
+            port:
+              number: 8429
+            host: vmagent-victoria-metrics-agent

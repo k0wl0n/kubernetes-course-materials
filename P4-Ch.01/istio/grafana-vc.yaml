@@ -1,0 +1,21 @@
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: grafana
+  namespace: monitoring
+spec:
+  hosts:
+    - grafana.apps.kowlon.my.id
+    - grafana
+  gateways:
+    - istio-system/apps
+  http:
+    - match: 
+        - uri:
+            prefix: /  
+      route:
+        - destination:
+            port:
+              number: 80
+            host: grafana

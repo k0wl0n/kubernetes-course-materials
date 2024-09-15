@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: env-check
+  labels:
+    app: env-check
+  namespace: production
+spec:
+  selector:
+    matchLabels:
+      app: env-check
+  replicas: 1
+  template:
+    metadata:
+      annotations:
+        vault.hashicorp.com/agent-inject: "true"
+        vault.hashicorp.com/agent-inject-status: "update"
+        vault.hashicorp.com/role: "internal-app"
+        vault.hashicorp.com/agent-inject-secret-env.txt: "internal/data/production/ecommerce-user"
+        vault.hashicorp.com/agent-inject-template-env.txt: |
+          {{- with secret "internal/data/production/ecommerce-user" -}}
+          ACCESS_TOKEN_EXP={{ .Data.data.ACCESS_TOKEN_EXP }}
+          CGO_ENABLED={{ .Data.data.CGO_ENABLED }}
+          DB_URL={{ .Data.data.DB_URL }}
+          GIN_MODE={{ .Data.data.GIN_MODE }}
+          INTERNAL_API_SECRET={{ .Data.data.INTERNAL_API_SECRET }}
+          PORT={{ .Data.data.PORT }}
+          REDIS_URL={{ .Data.data.REDIS_URL }}
+          REFRESH_TOKEN_EXP={{ .Data.data.REFRESH_TOKEN_EXP }}
+          {{- end -}}
+        vault.hashicorp.com/agent-inject-file-env.txt: ".env"
+      labels:
+        app: env-check
+    spec:
+      serviceAccountName: internal-app
+      containers:
+        - name: env-check
+          image: busybox
+          command: ["/bin/sh"]
+          args:
+            [
+              "-c",
+              "while true; do echo $(cat /vault/secrets/.env); sleep 5; done",
+            ]
+

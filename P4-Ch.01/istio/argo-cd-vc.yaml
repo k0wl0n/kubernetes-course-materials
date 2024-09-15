@@ -1,0 +1,21 @@
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: argocd
+  namespace: argocd
+spec:
+  hosts:
+    - argocd.apps.kowlon.my.id
+    - argocd
+  gateways:
+    - istio-system/apps
+  http:
+    - match: 
+        - uri:
+            prefix: /  
+      route:
+        - destination:
+            port:
+              number: 80
+            host: argocd-server

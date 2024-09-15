@@ -39,16 +39,17 @@ module "eks" {
 
   eks_managed_node_groups = {
     fastcampus-cluster-ng = {
-      min_size     = 1
+      min_size     = 2
       max_size     = 5
-      desired_size = 1
+      desired_size = 3
 
       instance_types = ["t3.large"]
       capacity_type  = "SPOT"
 
       tags = {
-        environtment = "staging"
-        cluster      = local.name
+        environment = "staging"
+        cluster     = local.name
+        "kubernetes.io/cluster/${local.name}" = "owned" # Required for Cluster Autoscaler
       }
     }
   }

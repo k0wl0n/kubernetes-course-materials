@@ -1,0 +1,29 @@
+groups: 
+- name: alert-kube
+    rules:
+    - alert: DeploymentReachingMemoryLimit
+    for: 1s
+    expr: |
+        WITH(
+            commonVars = {cluster="staging", namespace!~"kube-system"},
+            deploymentName = avg by (deployment, pod) (
+                label_replace(kube_pod_owner{commonVars, owner_kind="ReplicaSet"}, "replicaset", "$1", "owner_name", "(.*)") 
+                * on (replicaset) group_left(deployment) avg(label_replace(kube_replicaset_owner{commonVars}, "deployment", "$1", "owner_name", "(.*)")) by (replicaset, deployment) 
+            ),
+            containerUsage = avg by (deployment, namespace, cluster) (
+                deploymentName * on (pod) group_right(deployment) avg(container_memory_working_set_bytes{namespace!~"kube-system"}) by (container, pod, namespace, cluster)
+            ),
+            containerRequest = avg by (deployment, namespace, cluster) (
+                deploymentName * on (pod) group_right(deployment) avg(kube_pod_container_resource_requests{resource="memory", namespace!~"kube-system"}) by (container, pod, namespace, cluster)
+            ),
+        )
+        (containerUsage / containerRequest) * 100
+    labels:
+        cluster: '{{ $labels.cluster }}'
+        deployment: '{{ $labels.deployment }}'
+        namespace: '{{ $labels.namespace }}'
+        alert: deploymentReachingMemoryLimit
+        severity: WARNING
+    annotations:
+        message: '`{{ $labels.deployment }}` Deployment Memory utilization has reached {{ printf "%0.2f" $value }}% of its limit.'
+        resolved: '`{{ $labels.deployment}}` Deployment Memory utilization reached of its limit has been resolved.'

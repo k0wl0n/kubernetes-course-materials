@@ -1,0 +1,21 @@
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: jeager
+  namespace: monitoring
+spec:
+  hosts:
+    - jeager.apps.kowlon.my.id
+    - jeager-query
+  gateways:
+    - monitoring/apps
+  http:
+    - match: 
+        - uri:
+            prefix: /  
+      route:
+        - destination:
+            port:
+              number: 16686
+            host: jeager-query

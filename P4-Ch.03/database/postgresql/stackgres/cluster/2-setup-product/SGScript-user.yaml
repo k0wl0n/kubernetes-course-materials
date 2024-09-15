@@ -1,0 +1,16 @@
+apiVersion: stackgres.io/v1
+kind: SGScript
+metadata:
+  name: create-db-script-user-product
+  namespace: postgresql
+spec:
+  managedVersions: true
+  continueOnError: false
+  scripts:
+  - name: create-database
+    script: |
+      CREATE USER db_super WITH SUPERUSER PASSWORD 'RXxCqLaPrkHVlm8dx5YwE6v';
+
+      
+
+

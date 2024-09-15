@@ -1,0 +1,17 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: "echo-app-cicd"
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: git@github.com:k0wl0n/echo-app-cicd.git
+    targetRevision: main
+    path: deploy
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: staging
+  syncPolicy:
+    automated:
+      prune: true

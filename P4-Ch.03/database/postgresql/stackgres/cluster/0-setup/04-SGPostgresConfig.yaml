@@ -1,0 +1,37 @@
+apiVersion: stackgres.io/v1
+kind: SGPostgresConfig
+metadata:
+  namespace: postgresql
+  name: pgconfig
+spec:
+  postgresVersion: "14"
+  postgresql.conf:
+    shared_buffers: '512MB'                    
+    random_page_cost: '1'                      
+    checkpoint_timeout: '15min'                
+    max_connections: '100'                     
+    work_mem: '2MB'                            
+    maintenance_work_mem: '128MB'              
+    effective_cache_size: '1.5GB'              
+    max_wal_size: '5GB'                        
+    min_wal_size: '1GB'                        
+    max_worker_processes: '2'                  
+    max_parallel_workers_per_gather: '1'       
+    max_parallel_workers: '2'                  
+    max_parallel_maintenance_workers: '1'      
+    autovacuum_vacuum_scale_factor : '0.1'     
+    autovacuum_analyze_scale_factor : '0.05'   
+    autovacuum_max_workers: '1'                
+    log_min_duration_statement: '1000'         
+    log_checkpoints: 'on'                     
+    log_connections: 'on'                     
+    log_disconnections: 'on'                  
+    idle_in_transaction_session_timeout: '600000' 
+    checkpoint_completion_target: '0.9'       
+    default_statistics_target: '100'           
+    hot_standby_feedback: 'on'                
+    bgwriter_lru_maxpages: '100'               
+    bgwriter_lru_multiplier: '2'              
+    max_logical_replication_workers: '2'       
+    max_sync_workers_per_subscription: '2'     
+    autovacuum: 'on'

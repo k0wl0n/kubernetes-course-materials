@@ -1,0 +1,26 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: second-app-v1
+  namespace: production
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: second-app
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: second-app
+        version: v1
+        istio: monitor
+    spec:
+      containers:
+        - image: kowlon/go-echo:v1
+          imagePullPolicy: Always
+          name: second-app
+          ports:
+            - name: http
+              containerPort: 8080

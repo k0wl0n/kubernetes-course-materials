@@ -1,0 +1,30 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: echov3
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: echov3
+      version: v2
+  template:
+    metadata:
+      labels:
+        app: echov3
+        version: v3
+        istio: monitor
+        sidecar.istio.io/inject: "true"
+    spec:
+      containers:
+        - image: kowlon/go-echo:v3
+          imagePullPolicy: Always
+          name: echov3
+          env:
+            - name: env
+              value: production
+          ports:
+            - name: http
+              containerPort: 8080

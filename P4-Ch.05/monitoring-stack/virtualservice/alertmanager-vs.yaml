@@ -1,0 +1,19 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: alertmanager
+  namespace: monitoring
+spec:
+  hosts:
+    - alertmanager.apps.kowlon.my.id
+  gateways:
+    - production/apps
+  http:
+    - match: 
+        - uri:   
+            prefix: /  
+      route:
+        - destination:
+            port:
+              number: 
+            host: 

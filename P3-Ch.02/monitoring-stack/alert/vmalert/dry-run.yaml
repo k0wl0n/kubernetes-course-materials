@@ -1,0 +1,372 @@
+Release "vmalert" has been upgraded. Happy Helming!
+NAME: vmalert
+LAST DEPLOYED: Fri Sep 13 09:52:43 2024
+NAMESPACE: monitoring
+STATUS: pending-upgrade
+REVISION: 3
+TEST SUITE: None
+HOOKS:
+MANIFEST:
+---
+# Source: victoria-metrics-alert/templates/serviceaccount.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: vmalert-victoria-metrics-alert
+  namespace: monitoring
+  labels: 
+    helm.sh/chart: victoria-metrics-alert-0.11.1
+    app.kubernetes.io/managed-by: Helm
+---
+# Source: victoria-metrics-alert/templates/alertmanager-configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: vmalert-alertmanager-alertmanager-config
+  namespace: monitoring
+  labels: 
+    app: alertmanager
+    app.kubernetes.io/name: victoria-metrics-alert
+    app.kubernetes.io/instance: vmalert
+    helm.sh/chart: victoria-metrics-alert-0.11.1
+    app.kubernetes.io/managed-by: Helm
+data:
+  alertmanager.yaml: |
+    receivers:
+    - name: devnull
+    - name: Telegram Bot Alert
+      telegram_configs:
+      - api_url: https://api.telegram.org
+        bot_token: <bot_token>
+        chat_id: <chat_id>
+        message: '{{ template "telegram_deployment_resource" . }}'
+        send_resolved: true
+    route:
+      group_by:
+      - deployment
+      group_interval: 5m
+      group_wait: 10s
+      receiver: devnull
+      repeat_interval: 3h
+      routes:
+      - match:
+          alertname: DeploymentReachingMemoryLimit
+        receiver: Telegram Bot Alert
+      - match:
+          alertname: PodTerminated
+        receiver: Telegram Bot Alert
+    templates:
+    - /config/*.tmpl
+  alertmanager.tmpl: |
+    {{ define "telegram_deployment_resource" }}
+    {{ if eq .Status "firing" }}{{ range .Alerts }}
+    🪪 <b>{{ .Labels.alertname }}</b>
+    ---
+    🔥 {{ .Annotations.message }} 
+    📖 Severity: <code>{{ .Labels.severity}}</code>
+    ✨ Cluster: <code>{{ .Labels.cluster }}</code>
+    🌌 Namespace: <code>{{ .Labels.namespace }}</code>
+    🛠 <a href="http://127.0.0.1:8090/d/garysdevil-kube-state-metrics-v2/kubernetes-dashboard?orgId=1&var-cluster={{ .Labels.cluster }}&var-node=All&var-namespace={{ .Labels.namespace }}&var-datasource=vmcluster&var-deployment={{ .Labels.deployment }}">Grafana</a> 🛠
+    {{ end }}
+    
+    {{ else }}{{ range .Alerts }}
+    ✅ {{ .Annotations.resolved }} ✅
+    Cluster: <b>{{ .Labels.cluster }}</b>
+    Namespace: <b>{{ .Labels.namespace }}</b>
+    {{ end }}
+    
+    {{ end }}
+    {{ end }}
+---
+# Source: victoria-metrics-alert/templates/server-alerts-configmap.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: vmalert-victoria-metrics-alert-server-alert-rules-config
+  namespace: monitoring
+  labels: 
+    app: server
+    app.kubernetes.io/name: victoria-metrics-alert
+    app.kubernetes.io/instance: vmalert
+    helm.sh/chart: victoria-metrics-alert-0.11.1
+    app.kubernetes.io/managed-by: Helm
+data:
+  alert-rules.yaml: |
+    groups:
+    - name: alert-kube
+      rules:
+      - alert: DeploymentReachingMemoryLimit
+        annotations:
+          message: '{{ $labels.deployment }} Deployment Memory utilization has reached
+            {{ printf "%0.2f" $value }}% of its limit.'
+          resolved: '{{ $labels.deployment}} Deployment Memory utilization reached of
+            its limit has been resolved.'
+        expr: "WITH(\n    commonVars = {cluster=\"staging\", namespace!~\"kube-system\"},\n
+          \   deploymentName = avg by (deployment, pod) (\n        label_replace(kube_pod_owner{commonVars,
+          owner_kind=\"ReplicaSet\"}, \"replicaset\", \"$1\", \"owner_name\", \"(.*)\")
+          \n        * on (replicaset) group_left(deployment) avg(label_replace(kube_replicaset_owner{commonVars},
+          \"deployment\", \"$1\", \"owner_name\", \"(.*)\")) by (replicaset, deployment)
+          \n    ),\n    containerUsage = avg by (deployment, namespace, cluster) (\n        deploymentName
+          * on (pod) group_right(deployment) avg(container_memory_working_set_bytes{namespace!~\"kube-system\"})
+          by (container, pod, namespace, cluster)\n    ),\n    containerRequest = avg
+          by (deployment, namespace, cluster) (\n        deploymentName * on (pod) group_right(deployment)
+          avg(kube_pod_container_resource_requests{resource=\"memory\", namespace!~\"kube-system\"})
+          by (container, pod, namespace, cluster)\n    ),\n)\n(containerUsage / containerRequest)
+          * 100 > 10\n"
+        for: 1s
+        labels:
+          cluster: '{{ $labels.cluster }}'
+          deployment: '{{ $labels.deployment }}'
+          namespace: '{{ $labels.namespace }}'
+          severity: WARNING
+      - alert: PodTerminated
+        annotations:
+          message: '{{ $labels.pod }} pod on deployment {{ $labels.deployment }} has {{
+            $labels.reason }}'
+          resolved: '{{ $labels.pod }} pod {{ $labels.reason }} has been resolved.'
+        expr: "WITH(\n    commonVars = {cluster=\"staging\", namespace!~\"kube-system\"},\n
+          \   deploymentName = avg by (deployment, pod) (\n        label_replace(kube_pod_owner{commonVars,
+          owner_kind=\"ReplicaSet\"}, \"replicaset\", \"$1\", \"owner_name\", \"(.*)\")
+          \n        * on (replicaset) group_left(deployment) avg(label_replace(kube_replicaset_owner{commonVars},
+          \"deployment\", \"$1\", \"owner_name\", \"(.*)\")) by (replicaset, deployment)
+          \n    ),\n    podOOM = avg by (deployment, namespace, cluster, pod, reason)
+          (\n        deploymentName * on (pod) group_right(deployment) increase(kube_pod_container_status_last_terminated_reason)
+          \n    ),\n)\npodOOM >= 0\n"
+        for: 1s
+        labels:
+          cluster: '{{ $labels.cluster }}'
+          deployment: '{{ $labels.deployment }}'
+          namespace: '{{ $labels.namespace }}'
+          pod: '{{ $labels.pod }}'
+          reason: '{{ $labels.reason }}'
+          severity: Critical
+---
+# Source: victoria-metrics-alert/templates/clusterrolebinding.yaml
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: vmalert-victoria-metrics-alert-server-clusterrolebinding
+  namespace: monitoring
+  labels: 
+    app: server
+    app.kubernetes.io/name: victoria-metrics-alert
+    app.kubernetes.io/instance: vmalert
+    helm.sh/chart: victoria-metrics-alert-0.11.1
+    app.kubernetes.io/managed-by: Helm
+subjects:
+  - kind: ServiceAccount
+    name: vmalert-victoria-metrics-alert
+    namespace: monitoring
+roleRef:
+  kind: ClusterRole
+  name: vmalert-victoria-metrics-alert-server-clusterrole
+  apiGroup: rbac.authorization.k8s.io
+---
+# Source: victoria-metrics-alert/templates/alertmanager-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: monitoring
+  labels: 
+    app: alertmanager
+    app.kubernetes.io/name: victoria-metrics-alert
+    app.kubernetes.io/instance: vmalert
+    helm.sh/chart: victoria-metrics-alert-0.11.1
+    app.kubernetes.io/managed-by: Helm
+  name: vmalert-alertmanager
+spec:
+  type: ClusterIP
+  ports:
+    - name: web
+      port: 9093
+      targetPort: web
+      protocol: TCP
+  selector: 
+    app: alertmanager
+    app.kubernetes.io/name: victoria-metrics-alert
+    app.kubernetes.io/instance: vmalert
+---
+# Source: victoria-metrics-alert/templates/server-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: monitoring
+  labels: 
+    app: server
+    app.kubernetes.io/name: victoria-metrics-alert
+    app.kubernetes.io/instance: vmalert
+    helm.sh/chart: victoria-metrics-alert-0.11.1
+    app.kubernetes.io/managed-by: Helm
+  name: vmalert-victoria-metrics-alert-server
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: 8880
+      targetPort: http
+      protocol: TCP
+  selector: 
+    app: server
+    app.kubernetes.io/name: victoria-metrics-alert
+    app.kubernetes.io/instance: vmalert
+---
+# Source: victoria-metrics-alert/templates/alertmanager-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vmalert-alertmanager
+  namespace: monitoring
+  labels: 
+    app: alertmanager
+    app.kubernetes.io/name: victoria-metrics-alert
+    app.kubernetes.io/instance: vmalert
+    helm.sh/chart: victoria-metrics-alert-0.11.1
+    app.kubernetes.io/managed-by: Helm
+spec:
+  replicas: 1
+  selector:
+    matchLabels: 
+      app: alertmanager
+      app.kubernetes.io/name: victoria-metrics-alert
+      app.kubernetes.io/instance: vmalert
+  template:
+    metadata:
+      labels: 
+        app: alertmanager
+        app.kubernetes.io/name: victoria-metrics-alert
+        app.kubernetes.io/instance: vmalert
+        helm.sh/chart: victoria-metrics-alert-0.11.1
+        app.kubernetes.io/managed-by: Helm
+      annotations: 
+        checksum/config: 4d5683e5e53bd15b319e81fc0b3a6f4b8cf8fe3d9c4b1054bbbef8062ff799c0
+    spec:
+      serviceAccountName: vmalert-victoria-metrics-alert
+      automountServiceAccountToken: true
+      containers:
+        - name: alertmanager
+          image: prom/alertmanager:v0.25.0
+          args: 
+            - --cluster.advertise-address=[$(POD_IP)]:6783
+            - --config.file=/config/alertmanager.yaml
+            - --data.retention=120h
+            - --storage.path=/data
+            - --web.listen-address=0.0.0.0:9093
+          ports:
+            - name: web
+              containerPort: 9093
+          env:
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: status.podIP
+          readinessProbe: 
+            httpGet:
+              path: /-/ready
+              port: web
+              scheme: HTTP
+          livenessProbe: 
+            httpGet:
+              path: /-/healthy
+              port: web
+              scheme: HTTP
+          startupProbe: 
+            httpGet:
+              path: /-/ready
+              port: web
+              scheme: HTTP
+          volumeMounts:
+            - name: storage
+              mountPath: /data
+            - name: config
+              mountPath: /config
+              readOnly: true
+      volumes:
+        - name: storage
+          emptyDir: 
+            {}
+        - name: config
+          configMap:
+            name: vmalert-alertmanager-alertmanager-config
+---
+# Source: victoria-metrics-alert/templates/server-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vmalert-victoria-metrics-alert-server
+  namespace: monitoring
+  labels: 
+    app: server
+    app.kubernetes.io/name: victoria-metrics-alert
+    app.kubernetes.io/instance: vmalert
+    helm.sh/chart: victoria-metrics-alert-0.11.1
+    app.kubernetes.io/managed-by: Helm
+spec:
+  minReadySeconds: 0
+  replicas: 1
+  selector:
+    matchLabels: 
+      app: server
+      app.kubernetes.io/name: victoria-metrics-alert
+      app.kubernetes.io/instance: vmalert
+  strategy: 
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels: 
+        app: server
+        app.kubernetes.io/name: victoria-metrics-alert
+        app.kubernetes.io/instance: vmalert
+        helm.sh/chart: victoria-metrics-alert-0.11.1
+        app.kubernetes.io/managed-by: Helm
+      annotations: 
+        checksum/config: c3b832d8cd34db477d22b3a95305b56978f100a2166127d05be2a7cc68c67209
+    spec:
+      serviceAccountName: vmalert-victoria-metrics-alert
+      securityContext: 
+        {}
+      automountServiceAccountToken: true
+      containers:
+        - name: vmalert
+          securityContext: 
+            {}
+          image: victoriametrics/vmalert:v1.103.0
+          args: 
+            - --datasource.url=http://vmcluster-victoria-metrics-cluster-vmselect.monitoring.svc.cluster.local:8481/select/0/prometheus/
+            - --envflag.enable=true
+            - --envflag.prefix=VM_
+            - --loggerFormat=json
+            - --notifier.url=http://vmalert-alertmanager:9093
+            - --rule=/config/alert-rules.yaml
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 8880
+          readinessProbe: 
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: http
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 15
+            timeoutSeconds: 5
+          livenessProbe: 
+            failureThreshold: 3
+            initialDelaySeconds: 5
+            periodSeconds: 15
+            tcpSocket:
+              port: http
+            timeoutSeconds: 5
+          volumeMounts:
+            - name: alerts-config
+              mountPath: /config
+            
+      volumes:
+        - name: alerts-config
+          configMap:
+            name: vmalert-victoria-metrics-alert-server-alert-rules-config
+

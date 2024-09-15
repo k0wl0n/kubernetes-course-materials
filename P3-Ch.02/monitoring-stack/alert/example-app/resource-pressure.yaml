@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: resource-pressure
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: resource-pressure
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: resource-pressure
+        version: v1
+    spec:
+      containers:
+      - image: kowlon/preasure:v1
+        imagePullPolicy: IfNotPresent
+        name: resource-pressure
+        env:
+        - name: NUM_THREADS
+          value: "5"
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "200Mi"
+          limits:
+            cpu: "300m"
+            memory: "512Mi"

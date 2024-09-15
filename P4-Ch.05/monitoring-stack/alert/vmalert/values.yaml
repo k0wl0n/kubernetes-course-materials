@@ -1,0 +1,539 @@
+# Default values for victoria-metrics-alert.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+global:
+  compatibility:
+    openshift:
+      adaptSecurityContext: "auto"
+      
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name:
+  # mount API token to pod directly
+  automountToken: true
+
+rbac:
+  create: true
+  # Note: The PSP will only be deployed, if Kubernetes (<1.25) supports the resource.
+  pspEnabled: true
+  namespaced: false
+  extraLabels: {}
+  annotations: {}
+
+server:
+  name: server
+  enabled: true
+  image:
+    repository: victoriametrics/vmalert
+    tag: "" # rewrites Chart.AppVersion
+    # Variant of the image to use.
+    # e.g. enterprise, scratch
+    variant: ""
+    pullPolicy: IfNotPresent
+  nameOverride: ""
+  fullnameOverride: ""
+  imagePullSecrets: []
+
+  ## See `kubectl explain poddisruptionbudget.spec` for more
+  ## ref: https://kubernetes.io/docs/tasks/run-application/configure-pdb/
+  podDisruptionBudget:
+    enabled: false
+    # minAvailable: 1
+    # maxUnavailable: 1
+    labels: {}
+
+  # -- Additional environment variables (ex.: secret tokens, flags) https://github.com/VictoriaMetrics/VictoriaMetrics#environment-variables
+  env:
+    []
+    # - name: VM_remoteWrite_basicAuth_password
+    #   valueFrom:
+    #     secretKeyRef:
+    #       name: auth_secret
+    #       key: password
+
+  envFrom:
+    []
+    #- configMapRef:
+    #    name: special-config
+    
+  # Readiness & Liveness probes
+  probe:
+    readiness:
+      initialDelaySeconds: 5
+      periodSeconds: 15
+      timeoutSeconds: 5
+      failureThreshold: 3
+    liveness:
+      initialDelaySeconds: 5
+      periodSeconds: 15
+      timeoutSeconds: 5
+      failureThreshold: 3
+
+  replicaCount: 1
+
+  # deployment strategy, set to standard k8s default
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+
+  # specifies the minimum number of seconds for which a newly created Pod should be ready without any of its containers crashing/terminating
+  # 0 is the standard k8s default
+  minReadySeconds: 0
+
+  # vmalert reads metrics from source, next section represents its configuration. It can be any service which supports
+  # MetricsQL or PromQL.
+  datasource:
+    url: "http://vmcluster-victoria-metrics-cluster-vmselect.monitoring.svc.cluster.local:8481/select/0/prometheus/"
+    # -- Basic auth for datasource
+    basicAuth:
+      username: ""
+      password: ""
+      # -- Auth based on Bearer token for datasource
+    bearer:
+      # -- Token with Bearer token. You can use one of token or tokenFile. You don't need to add "Bearer" prefix string
+      token: ""
+      # -- Token Auth file with Bearer token. You can use one of token or tokenFile
+      tokenFile: ""
+
+  remote:
+    write:
+      url: ""
+      # -- Basic auth for remote write
+      basicAuth:
+        username: ""
+        password: ""
+      # -- Auth based on Bearer token for remote write
+      bearer:
+        # -- Token with Bearer token. You can use one of token or tokenFile. You don't need to add "Bearer" prefix string
+        token: ""
+        # -- Token Auth file with Bearer token. You can use one of token or tokenFile
+        tokenFile: ""
+    read:
+      url: ""
+      # -- Basic auth for remote read
+      basicAuth:
+        username: ""
+        password: ""
+        # -- Auth based on Bearer token for remote read
+      bearer:
+        # -- Token with Bearer token. You can use one of token or tokenFile. You don't need to add "Bearer" prefix string
+        token: ""
+        # -- Token Auth file with Bearer token. You can use one of token or tokenFile
+        tokenFile: ""
+
+  # -- Notifier to use for alerts.
+  # Multiple notifiers can be enabled by using `notifiers` section
+  notifier:
+    alertmanager:
+      url: "http://alertmanager.monitoring.svc.cluster.local:9093"
+      # -- Basic auth for alertmanager
+      basicAuth:
+        username: ""
+        password: ""
+        # -- Auth based on Bearer token for alertmanager
+      bearer:
+        # -- Token with Bearer token. You can use one of token or tokenFile. You don't need to add "Bearer" prefix string
+        token: ""
+        # -- Token Auth file with Bearer token. You can use one of token or tokenFile
+        tokenFile: ""
+
+  # -- Additional notifiers to use for alerts
+  notifiers:
+    []
+    # - alertmanager:
+    #    url: ""
+    #    basicAuth:
+    #      username: ""
+    #      password: ""
+    #    bearer:
+    #      token: ""
+    #      tokenFile: ""
+
+  extraArgs:
+    envflag.enable: "true"
+    envflag.prefix: VM_
+    loggerFormat: json
+
+  # -- Additional hostPath mounts
+  extraHostPathMounts:
+    []
+    # - name: certs-dir
+    #   mountPath: /etc/kubernetes/certs
+    #   subPath: ""
+    #   hostPath: /etc/kubernetes/certs
+  #   readOnly: true
+
+  # -- Extra Volumes for the pod
+  extraVolumes:
+    []
+    #- name: example
+    #  configMap:
+    #    name: example
+
+  # -- Extra Volume Mounts for the container
+  extraVolumeMounts:
+    []
+    # - name: example
+    #   mountPath: /example
+
+  # -- Additional containers to run in the same pod
+  extraContainers:
+    []
+    #- name: config-reloader
+    #  image: reloader-image
+
+  service:
+    annotations: {}
+    labels: {}
+    clusterIP: ""
+    ## Ref: https://kubernetes.io/docs/user-guide/services/#external-ips
+    ##
+    externalIPs: []
+    loadBalancerIP: ""
+    loadBalancerSourceRanges: []
+    servicePort: 8880
+    # nodePort: 30000
+    type: ClusterIP
+    # Ref: https://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/#preserving-the-client-source-ip
+    # externalTrafficPolicy: "local"
+    # healthCheckNodePort: 0
+
+  ingress:
+    enabled: false
+    annotations: {}
+    #   kubernetes.io/ingress.class: nginx
+    #   kubernetes.io/tls-acme: 'true'
+
+    extraLabels: {}
+    hosts: []
+    #   - name: vmselect.local
+    #     path: /select
+    #     port: http
+
+    tls: []
+    #   - secretName: vmselect-ingress-tls
+    #     hosts:
+    #       - vmselect.local
+
+    # For Kubernetes >= 1.18 you should specify the ingress-controller via the field ingressClassName
+    # See https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/#specifying-the-class-of-an-ingress
+    # ingressClassName: nginx
+    # -- pathType is only for k8s >= 1.1=
+    pathType: Prefix
+
+  podSecurityContext:
+    enabled: true
+  # fsGroup: 2000
+
+  securityContext:
+    enabled: true
+    # capabilities:
+    #   drop:
+    #   - ALL
+    # readOnlyRootFilesystem: true
+    # runAsNonRoot: true
+  # runAsUser: 1000
+
+  resources:
+    {}
+    # We usually recommend not to specify default resources and to leave this as a conscious
+    # choice for the user. This also increases chances charts run on environments with little
+    # resources, such as Minikube. If you do want to specify resources, uncomment the following
+    # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+    # limits:
+    #   cpu: 100m
+    #   memory: 128Mi
+    # requests:
+    #   cpu: 100m
+  #   memory: 128Mi
+
+  # Annotations to be added to the deployment
+  annotations: {}
+  # labels to be added to the deployment
+  labels: {}
+
+  # Annotations to be added to pod
+  podAnnotations: {}
+
+  podLabels: {}
+
+  nodeSelector: {}
+
+  priorityClassName: ""
+
+  tolerations: []
+
+  affinity: {}
+
+  # vmalert alert rules configuration configuration:
+  # use existing configmap if specified
+  # otherwise .config values will be used
+  configMap: ""
+  config:
+    alerts:
+      groups: 
+        - name: alert-kube
+          rules:
+          - alert: DeploymentReachingMemoryLimit
+            for: 1s
+            expr: |
+              WITH(
+                  commonVars = {cluster="staging", namespace!~"kube-system"},
+                  deploymentName = avg by (deployment, pod) (
+                      label_replace(kube_pod_owner{commonVars, owner_kind="ReplicaSet"}, "replicaset", "$1", "owner_name", "(.*)") 
+                      * on (replicaset) group_left(deployment) avg(label_replace(kube_replicaset_owner{commonVars}, "deployment", "$1", "owner_name", "(.*)")) by (replicaset, deployment) 
+                  ),
+                  containerUsage = avg by (deployment, namespace, cluster) (
+                      deploymentName * on (pod) group_right(deployment) avg(container_memory_working_set_bytes{namespace!~"kube-system"}) by (container, pod, namespace, cluster)
+                  ),
+                  containerRequest = avg by (deployment, namespace, cluster) (
+                      deploymentName * on (pod) group_right(deployment) avg(kube_pod_container_resource_requests{resource="memory", namespace!~"kube-system"}) by (container, pod, namespace, cluster)
+                  ),
+              )
+              (containerUsage / containerRequest) * 100 > 10
+            labels:
+                cluster: '{{ $labels.cluster }}'
+                deployment: '{{ $labels.deployment }}'
+                namespace: '{{ $labels.namespace }}'
+                severity: WARNING
+            annotations:
+                message: '{{ $labels.deployment }} Deployment Memory utilization has reached {{ printf "%0.2f" $value }}% of its limit.'
+                resolved: '{{ $labels.deployment}} Deployment Memory utilization reached of its limit has been resolved.'
+
+          - alert: PodTerminated
+            for: 1s
+            expr: |
+              WITH(
+                  commonVars = {cluster="staging", namespace!~"kube-system"},
+                  deploymentName = avg by (deployment, pod) (
+                      label_replace(kube_pod_owner{commonVars, owner_kind="ReplicaSet"}, "replicaset", "$1", "owner_name", "(.*)") 
+                      * on (replicaset) group_left(deployment) avg(label_replace(kube_replicaset_owner{commonVars}, "deployment", "$1", "owner_name", "(.*)")) by (replicaset, deployment) 
+                  ),
+                  podOOM = avg by (deployment, namespace, cluster, pod, reason) (
+                      deploymentName * on (pod) group_right(deployment) increase(kube_pod_container_status_last_terminated_reason) 
+                  ),
+              )
+              podOOM >= 0
+            labels:
+                cluster: '{{ $labels.cluster }}'
+                deployment: '{{ $labels.deployment }}'
+                pod: '{{ $labels.pod }}'
+                namespace: '{{ $labels.namespace }}'
+                reason: '{{ $labels.reason }}'
+                severity: Critical
+            annotations:
+                message: '{{ $labels.pod }} pod on deployment {{ $labels.deployment }} has {{ $labels.reason }}'
+                resolved: '{{ $labels.pod }} pod {{ $labels.reason }} has been resolved.'
+
+serviceMonitor:
+  enabled: false
+  extraLabels: {}
+  annotations: {}
+  relabelings: []
+  metricRelabelings: []
+#    interval: 15s
+#    scrapeTimeout: 5s
+# -- Commented. HTTP scheme to use for scraping.
+#    scheme: https
+# -- Commented. TLS configuration to use when scraping the endpoint
+#    tlsConfig:
+#      insecureSkipVerify: true
+
+alertmanager:
+  enabled: true
+  podMetadata:
+    labels: {}
+    annotations: {}
+  image:
+    registry: ""
+    repository: prom/alertmanager
+    tag: v0.25.0
+  retention: 120h
+  nodeSelector: {}
+  priorityClassName: ""
+  resources: {}
+  tolerations: []
+  imagePullSecrets: []
+  probe:
+    readiness:
+      httpGet:
+        path: '{{ ternary "" .baseURLPrefix (empty .baseURLPrefix) }}/-/ready'
+        port: web
+    liveness:
+      httpGet:
+        path: '{{ ternary "" .baseURLPrefix (empty .baseURLPrefix) }}/-/healthy'
+        port: web
+    startup:
+      httpGet:
+        path: '{{ ternary "" .baseURLPrefix (empty .baseURLPrefix) }}/-/ready'
+        port: web
+  podSecurityContext:
+    enabled: false
+  securityContext:
+    enabled: false
+  listenAddress: "0.0.0.0:9093"
+  extraArgs: {}
+  # key: value
+
+  # external URL, that alertmanager will expose to receivers
+  baseURL: ""
+  # external URL Prefix, Prefix for the internal routes of web endpoints
+  baseURLPrefix: ""
+  # use existing configmap if specified
+  # otherwise .config values will be used
+  configMap: ""
+  config:
+    global:
+      # slack_api_url: ''
+
+    templates:
+      - '/config/*.tmpl'
+
+    receivers:
+      - name: devnull
+      - name: 'Telegram Bot Alert'
+        telegram_configs:
+        - api_url: https://api.telegram.org
+          bot_token: '<bot_token>'
+          chat_id: <chat_id>
+          send_resolved: true
+          message: '{{ template "telegram_deployment_resource" . }}'
+
+    route:
+      group_wait: 10s
+      group_interval: 5m
+      receiver: devnull
+      repeat_interval: 3h
+      group_by: 
+        - deployment
+
+      routes: 
+        - match:
+            alertname: DeploymentReachingMemoryLimit
+          receiver: 'Telegram Bot Alert'
+        - match:
+            alertname: PodTerminated
+          receiver: 'Telegram Bot Alert'
+
+  templates: 
+   alertmanager.tmpl: |
+      {{ define "telegram_deployment_resource" }}
+      {{ if eq .Status "firing" }}{{ range .Alerts }}
+      🪪 <b>{{ .Labels.alertname }}</b>
+      ---
+      🔥 {{ .Annotations.message }} 
+      📖 Severity: <code>{{ .Labels.severity}}</code>
+      ✨ Cluster: <code>{{ .Labels.cluster }}</code>
+      🌌 Namespace: <code>{{ .Labels.namespace }}</code>
+      🛠 <a href="http://127.0.0.1:8090/d/garysdevil-kube-state-metrics-v2/kubernetes-dashboard?orgId=1&var-cluster={{ .Labels.cluster }}&var-node=All&var-namespace={{ .Labels.namespace }}&var-datasource=vmcluster&var-deployment={{ .Labels.deployment }}">Grafana</a> 🛠
+      {{ end }}
+
+      {{ else }}{{ range .Alerts }}
+      ✅ {{ .Annotations.resolved }} ✅
+      Cluster: <b>{{ .Labels.cluster }}</b>
+      Namespace: <b>{{ .Labels.namespace }}</b>
+      {{ end }}
+
+      {{ end }}
+      {{ end }}
+
+  service:
+    annotations: {}
+    type: ClusterIP
+    port: 9093
+    # if you want to force a specific nodePort. Must be use with service.type=NodePort
+    # nodePort:
+  ingress:
+    enabled: false
+    annotations: {}
+    #   kubernetes.io/ingress.class: nginx
+    #   kubernetes.io/tls-acme: 'true'
+    extraLabels: {}
+    hosts: []
+    #   - name: alertmanager.local
+    #     path: /
+    #     port: web
+
+    tls: []
+    #   - secretName: alertmanager-ingress-tls
+    #     hosts:
+    #       - alertmanager.local
+
+    # For Kubernetes >= 1.18 you should specify the ingress-controller via the field ingressClassName
+    # See https://kubernetes.io/blog/2020/04/02/improvements-to-the-ingress-api-in-kubernetes-1.18/#specifying-the-class-of-an-ingress
+    # ingressClassName: nginx
+    # -- pathType is only for k8s >= 1.1=
+    pathType: Prefix
+  persistentVolume:
+    # -- Create/use Persistent Volume Claim for alertmanager component. Empty dir if false
+    enabled: true
+    # -- Array of access modes. Must match those of existing PV or dynamic provisioner. Ref: [http://kubernetes.io/docs/user-guide/persistent-volumes/](http://kubernetes.io/docs/user-guide/persistent-volumes/)
+    accessModes:
+      - ReadWriteOnce
+    # -- Persistant volume annotations
+    annotations: {}
+    # -- StorageClass to use for persistent volume. Requires alertmanager.persistentVolume.enabled: true. If defined, PVC created automatically
+    storageClass: "gp3"
+    # -- Existing Claim name. If defined, PVC must be created manually before volume will be bound
+    existingClaim: ""
+    # -- Mount path. Alertmanager data Persistent Volume mount root path.
+    mountPath: /data
+    # -- Mount subpath
+    subPath: ""
+    # -- Size of the volume. Better to set the same as resource limit memory property.
+    size: 50Mi
+
+  # Additional hostPath mounts
+  extraHostPathMounts:
+    []
+    # - name: certs-dir
+    #   mountPath: /etc/kubernetes/certs
+    #   subPath: ""
+    #   hostPath: /etc/kubernetes/certs
+  #   readOnly: true
+
+  # Extra Volumes for the pod
+  extraVolumes:
+    []
+    #- name: example
+    #  configMap:
+    #    name: example
+
+  # Extra Volume Mounts for the container
+  extraVolumeMounts:
+    []
+    # - name: example
+    #   mountPath: /example
+
+  extraContainers:
+    []
+    #- name: config-reloader
+    #  image: reloader-image
+
+# -- Add extra specs dynamically to this chart
+extraObjects: []
+
+# -- Enterprise license key configuration for VictoriaMetrics enterprise.
+# Required only for VictoriaMetrics enterprise.
+# Documentation - https://docs.victoriametrics.com/enterprise.html,
+# for more information, visit https://victoriametrics.com/products/enterprise/ .
+# To request a trial license, go to https://victoriametrics.com/products/enterprise/trial/
+# Supported starting from VictoriaMetrics v1.94.0
+license:
+  # -- License key
+  key: ""
+
+  # -- Use existing secret with license key
+  secret:
+    # -- Existing secret name
+    name: ""
+    # -- Key in secret with license key
+    key: ""
+

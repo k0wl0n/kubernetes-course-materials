@@ -1,0 +1,27 @@
+apiVersion: stackgres.io/v1
+kind: SGCluster
+metadata:
+  namespace: postgresql
+  name: postgresql-user-order
+spec:
+  postgres:
+    version: '14.10'
+    extensions:
+    - name: 'pg_repack'
+    - name: 'pg_trgm'
+  instances: 2
+  sgInstanceProfile: 'size-m'
+  pods:
+    persistentVolume:
+      size: '5Gi'
+  configurations:
+    sgPostgresConfig: 'pgconfig'
+  managedSql:
+    scripts:
+      - sgScript: create-db-script-order
+      - sgScript: create-db-script-user-order
+  postgresServices:
+    primary:
+      type: ClusterIP
+    replicas:
+      type: ClusterIP

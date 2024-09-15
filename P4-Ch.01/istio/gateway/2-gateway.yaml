@@ -1,0 +1,25 @@
+---
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: apps
+  namespace: istio-system
+spec:
+  selector:
+    istio: gateway
+  servers:
+    - port:
+        number: 80
+        name: http
+        protocol: HTTP
+      hosts:
+        - "*.apps.kowlon.my.id"  # Wildcard host for HTTP
+    - port:
+        number: 443
+        name: https
+        protocol: HTTPS
+      hosts:
+        - "*.apps.kowlon.my.id"  # Wildcard host for HTTPS
+      # tls:
+      #   credentialName: apps-kowlon-my-id-wc-crt  # Secret for wildcard TLS certificate
+      #   mode: SIMPLE

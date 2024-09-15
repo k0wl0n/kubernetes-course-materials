@@ -1,0 +1,50 @@
+global:
+  # slack_api_url: ''
+
+templates:
+  - '/config/*.tmpl'
+
+receivers:
+  - name: devnull
+  - name: 'Telegram Bot Alert'
+    telegram_configs:
+    - api_url: https://api.telegram.org
+      bot_token: '1761338732:AAE9T4hI1zcUh1Yf9xRjohLyfn5zNvFSJ1I'
+      chat_id: 391
+      send_resolved: false
+      message: '{{ template "telegram.deployment.resource" . }}'
+
+route:
+  group_wait: 10s
+  group_interval: 5m
+  receiver: devnull
+  repeat_interval: 3h
+  group_by: 
+    - deployment
+
+  routes: 
+    - match:
+        alertname: DeploymentReachingMemoryLimit
+      receiver: 'Telegram Bot Alert'
+
+templates: 
+alertmanager.tmpl: |
+  {{ define "telegram_deployment_resource" }}
+  {{ if eq .Status "firing" }}{{ range .Alerts }}
+  🪪 <b>{{ .Labels.alertname }}</b>
+  ---
+  🔥 {{ .Annotations.message }} 
+  📖 Severity: <code>{{ .Labels.severity}}</code>
+  ✨ Cluster: <code>{{ .Labels.cluster }}</code>
+  🌌 Namespace: <code>{{ .Labels.namespace }}</code>
+  🛠 <a href="http://127.0.0.1:8090/d/garysdevil-kube-state-metrics-v2/kubernetes-dashboard?orgId=1&var-cluster={{ .Labels.cluster }}&var-node=All&var-namespace={{ .Labels.namespace }}&var-datasource=vmcluster&var-deployment={{ .Labels.deployment }}">Grafana</a> 🛠
+  {{ end }}
+
+  {{ else }}{{ range .Alerts }}
+  ✅ {{ .Annotations.resolved }} ✅
+  Cluster: <b>{{ .Labels.cluster }}</b>
+  Namespace: <b>{{ .Labels.namespace }}</b>
+  {{ end }}
+
+  {{ end }}
+  {{ end }}
