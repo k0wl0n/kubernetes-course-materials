@@ -8,13 +8,14 @@ vault operator init
 
 save unseal key, example
 
-```Unseal Key 1: smhuBRrBj1XY02huNn9v/yofkTyenRp8nynKh8xSjRR0
-Unseal Key 2: kryZor5cE3Jz17Y2cs/RsO3Ake6OQdjSHnDAprGEq0x5
-Unseal Key 3: Sg1aGLK9gINcHkspZvAZUeVobtl+qpaBp8xO6Qr3Xc8k
-Unseal Key 4: ovxsMTwf/NkMPVnEZu1xW8FYteLX/zf8X778ciKBTv9+
-Unseal Key 5: 3WEvhDFcU2kZW3OYeHoNU4XEFTUWRgfx3LhKuhmq5dA0
+```
+Unseal Key 1: 
+Unseal Key 2: 
+Unseal Key 3: 
+Unseal Key 4: 
+Unseal Key 5: 
 
-Initial Root Token: hvs.LbuyOzsICHZ1dNfARMfb6kCH
+Initial Root Token: 
 
 Vault initialized with 5 key shares and a key threshold of 3. Please securely
 distribute the key shares printed above. When the Vault is re-sealed,
