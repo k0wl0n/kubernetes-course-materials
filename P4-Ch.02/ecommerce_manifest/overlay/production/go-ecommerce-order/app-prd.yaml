@@ -1,0 +1,17 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: "ecommerce_order_production"
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: git@github.com:k0wl0n/go-ecommerce-order.git
+    targetRevision: HEAD
+    path: overlay/production/go-ecommerce-order
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: production
+  syncPolicy:
+    automated:
+      prune: true

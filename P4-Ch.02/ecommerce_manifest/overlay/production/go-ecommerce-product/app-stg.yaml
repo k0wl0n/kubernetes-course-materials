@@ -1,0 +1,17 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: "ecommerce-product-staging"
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: git@github.com:k0wl0n/go-ecommerce-product.git
+    targetRevision: HEAD
+    path: overlay/staging/go-ecommerce-product
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: staging
+  syncPolicy:
+    automated:
+      prune: true

@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ecommerce-product
+  namespace: production
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ecommerce-product
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  template:
+    metadata:
+      labels:
+        app: ecommerce-product
+      annotations:
+        vault.hashicorp.com/agent-inject: "true"
+        vault.hashicorp.com/agent-inject-status: "update"
+        vault.hashicorp.com/role: "internal-app"
+        vault.hashicorp.com/agent-inject-secret-env.txt: "internal/data/production/ecommerce-product"
+        vault.hashicorp.com/agent-inject-template-env.txt: |
+          {{- with secret "internal/data/production/ecommerce-product" -}}
+          ACCESS_TOKEN_EXP={{ .Data.data.ACCESS_TOKEN_EXP }}
+          CGO_ENABLED={{ .Data.data.CGO_ENABLED }}
+          DB_URL={{ .Data.data.DB_URL }}
+          GIN_MODE={{ .Data.data.GIN_MODE }}
+          INTERNAL_API_SECRET={{ .Data.data.INTERNAL_API_SECRET }}
+          PORT={{ .Data.data.PORT }}
+          REDIS_URL={{ .Data.data.REDIS_URL }}
+          REFRESH_TOKEN_EXP={{ .Data.data.REFRESH_TOKEN_EXP }}
+          {{- end -}}
+        vault.hashicorp.com/agent-inject-file-env.txt: ".env"
+    spec:
+      serviceAccountName: internal-app
+      containers:
+      - name: ecommerce-product
+        image: kowlon/go-echo:v2
+        ports:
+        - containerPort: 8080
+        env:
+        - name: APP_ENV
+          value: "production"
+        resources:
+            requests:
+              cpu: "10m"
+              memory: "32Mi"
+            limits:
+              cpu: "100m"
+              memory: "128Mi"
+        readinessProbe:
+          httpGet:
+            path: /health-check
+            port: 8080
+          initialDelaySeconds: 5
+          periodSeconds: 10
