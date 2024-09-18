@@ -1,0 +1,13 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ecommerce-product
+  namespace: production
+spec:
+  template:
+    spec:
+      containers:
+      - name: ecommerce-product
+        env:
+        - name: APP_ENV
+          value: "production"

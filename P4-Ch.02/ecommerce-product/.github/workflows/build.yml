@@ -1,0 +1,80 @@
+  name: Push the Docker image to AWS ECR Repo
+  on:
+    push:
+      tags:
+        - stg-v.*
+        - prod-v.*
+  jobs:
+    Build:
+      name: Build
+      runs-on: ubuntu-latest
+      steps:
+        - name: Checkout
+          uses: actions/checkout@v2
+
+        - name: Set environment globally based on tag
+          id: set-environment
+          run: |
+            if [[ "${GITHUB_REF}" == refs/tags/stg-v* ]]; then
+              echo "ENVIRONMENT=staging" >> $GITHUB_ENV
+            elif [[ "${GITHUB_REF}" == refs/tags/prod-v* ]]; then
+              echo "ENVIRONMENT=production" >> $GITHUB_ENV
+            fi
+
+        - name: Configure AWS credentials
+          uses: aws-actions/configure-aws-credentials@v1
+          with:
+            aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            aws-region: ${{ secrets.AWS_REGION }}
+
+        - name: Login to Amazon ECR
+          id: login-ecr
+          uses: aws-actions/amazon-ecr-login@v1
+          with:
+            region: ${{ secrets.AWS_REGION }}
+
+        - name: Build, tag, and push the image to Amazon ECR
+          id: build-image
+          env:
+            ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+            ECR_REPOSITORY: ${{ secrets.REPO_NAME }}
+            IMAGE_TAG: ${{ github.ref_name }}
+          run: |
+            docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+            docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+
+        - name: Update kustomization.yaml with new image tag
+          run: |
+            # Update the namespace based on the environment
+            sed -i 's/namespace:.*/namespace: '"${{ env.ENVIRONMENT }}"'/g' deploy/kustomization.yaml
+            
+            # Update the image tag with the current GitHub ref name (tag)
+            sed -i 's/newTag:.*/newTag: '"${{ github.ref_name }}"'/g' deploy/kustomization.yaml
+
+            sed -i 's/${{ secrets.REPO_NAME }}\.apps\.kowlon\.my\.id/${{ secrets.REPO_NAME }}-'"${{ env.ENVIRONMENT }}"'.apps.kowlon.my.id/g' deploy/virtual-service.yaml
+          
+            cat deploy/kustomization.yaml
+            cat deploy/virtual-service.yaml
+
+        - name: Pushes to another repository
+          uses: cpina/github-action-push-to-another-repository@main
+          env:
+            API_TOKEN_GITHUB: ${{ secrets.REPO_TOKEN }}
+          with:
+            source-directory: 'deploy'
+            target-directory: 'overlay/${{ env.ENVIRONMENT }}/${{ secrets.REPO_NAME }}'
+            destination-github-username: 'k0wl0n'
+            destination-repository-name: 'ecommerce-manifest'
+            user-email: wahyuanggana1@gmail.com
+            target-branch: main
+
+        - name: Run Trivy vulnerability scanner
+          uses: aquasecurity/trivy-action@0.20.0
+          with:
+            image-ref: ${{ steps.login-ecr.outputs.registry }}/${{ secrets.REPO_NAME }}:${{ github.ref_name }}
+            format: 'table'
+            exit-code: '0'
+            ignore-unfixed: true
+            vuln-type: 'os,library'
+            severity: 'CRITICAL,HIGH'

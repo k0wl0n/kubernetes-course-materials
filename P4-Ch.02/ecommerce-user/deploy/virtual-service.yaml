@@ -1,0 +1,20 @@
+---
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: ecommerce-user
+spec:
+  hosts:
+    - ecommerce-user.apps.kowlon.my.id
+    - ecommerce-user
+  gateways:
+    - istio-system/apps
+  http:
+    - match: 
+        - uri:
+            prefix: /  
+      route:
+        - destination:
+            port:
+              number: 80
+            host: ecommerce-user
