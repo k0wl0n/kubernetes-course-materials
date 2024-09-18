@@ -2,7 +2,6 @@
 ```
 helm repo add grafana https://grafana.github.io/helm-charts
 helm repo update
-helm show values grafana/promtail > values.yaml
 helm upgrade --install promtail grafana/promtail -f values.yaml
 ```
 

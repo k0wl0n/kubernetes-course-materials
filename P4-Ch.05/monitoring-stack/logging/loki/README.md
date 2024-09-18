@@ -2,7 +2,6 @@
 ```
 helm repo add grafana https://grafana.github.io/helm-charts
 helm repo update
-helm show values grafana/loki-distributed > values.yaml
 helm upgrade --install loki-distributed grafana/loki-distributed -f values.yaml
 
 enable cache if any: 

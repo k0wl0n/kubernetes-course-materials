@@ -9,7 +9,7 @@ spec:
     - jeager.apps.kowlon.my.id
     - jeager-query
   gateways:
-    - monitoring/apps
+    - istio-system/apps
   http:
     - match: 
         - uri:

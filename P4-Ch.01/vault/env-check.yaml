@@ -42,4 +42,3 @@ spec:
               "-c",
               "while true; do echo $(cat /vault/secrets/.env); sleep 5; done",
             ]
-

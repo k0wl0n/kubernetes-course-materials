@@ -6,11 +6,11 @@ provider "aws" {
 
 # Define the S3 bucket
 resource "aws_s3_bucket" "terraform_state_bucket" {
-  bucket = "terraform-eks-production-fascampus"  # Replace with your bucket name
+  bucket = "terraform-state-production-fascampus"  # Replace with your bucket name
   acl    = "private"
 
   versioning {
-    enabled = true
+    enabled = false
   }
 
   tags = {
@@ -61,7 +61,7 @@ resource "aws_s3_bucket_public_access_block" "terraform_state_public_access_bloc
 
 # Define the DynamoDB table for state locking
 resource "aws_dynamodb_table" "terraform_state_lock" {
-  name         = "terraform-eks-production-fascampus-lock"
+  name         = "terraform-state-production-fascampus-lock"
   billing_mode = "PAY_PER_REQUEST"
   hash_key     = "LockID"
 

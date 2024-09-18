@@ -1,0 +1,2176 @@
+{
+	"info": {
+		"_postman_id": "ce5a729e-170c-4044-a497-3b819bd52476",
+		"name": "E-commerce",
+		"description": "A basic e-commerce application build using go/gin and utilizing microservice architecture.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "36011390",
+		"_collection_link": "https://crimson-sunset-126315.postman.co/workspace/eFishery~19ecc21d-8262-4b29-aacc-a9f26db5e2f1/collection/36011390-ce5a729e-170c-4044-a497-3b819bd52476?action=share&source=collection_link&creator=36011390"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Register",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Set Tokens\", function () {",
+									"    if (pm.response.code === 201) {",
+									"        var jsonData = pm.response.json();",
+									"        pm.collectionVariables.set(\"access_token\", jsonData.data.access);",
+									"        pm.collectionVariables.set(\"refresh_token\", jsonData.data.refresh);",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"kowlon@kowlon.com\",\n    \"password\": \"!Kowlon25\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{user_service_url}}/api/v1/register/",
+							"host": [
+								"{{user_service_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"register",
+								""
+							]
+						},
+						"description": "This HTTP POST request is used to register a new user. The request should include the user's email and password in the request body. Upon successful execution, the server responds with a status code of 201 and a JSON object containing the access and refresh tokens along with a message indicating the success of the account creation.\n\n### Request Body\n\n- email (string, required): The email of the user to be registered.\n- password (string, required): The password for the user's account.\n    \n\n### Response\n\n- data (object): An object containing the access and refresh tokens.\n    - access (string): The access token for the registered user.\n    - refresh (string): The refresh token for the registered user.\n- message (string): A message indicating the success of the account creation.\n    \n\n#### Example Response\n\n``` json\n{\n    \"data\": {\n        \"access\": \"<access_token>\",\n        \"refresh\": \"<refresh_token>\"\n    },\n    \"message\": \"Account created successfully!\"\n}\n\n ```"
+					},
+					"response": [
+						{
+							"name": "Register - Error Response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"asdas@asd1.com\",\n    \"password\": \"12345678Uu@\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/v1/register/",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"register",
+										""
+									]
+								}
+							},
+							"status": "Internal Server Error",
+							"code": 500,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 29 Dec 2023 07:39:36 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "57"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"User with this email address already exists\"\n}"
+						},
+						{
+							"name": "Register - Success Response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"asdas@asd2.com\",\n    \"password\": \"12345678Uu@\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/v1/register/",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"register",
+										""
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 29 Dec 2023 07:44:24 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "411"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"data\": {\n        \"access\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjoiNDkzNjlmNGMtY2M3Yi00YmU5LWJlMjYtYTViYjYzM2VlMmMzIiwiZXhwIjoxNzA0NDQwNjY0fQ.lP8JQ2aSE36MznZj-fJJreP2-f9Mr7GwgLW1FiBbrS0\",\n        \"refresh\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjoiNDkzNjlmNGMtY2M3Yi00YmU5LWJlMjYtYTViYjYzM2VlMmMzIiwiZXhwIjoxNzA1MDQ1NDY0fQ.w4IvPOwq4CHT2t-nz3Eb6Z7K-TG52yyqEjOv1v4NOfc\"\n    },\n    \"message\": \"Account created successfully!\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Set Tokens\", function () {",
+									"    if (pm.response.code === 200) {",
+									"        var jsonData = pm.response.json();",
+									"        pm.collectionVariables.set(\"access_token\", jsonData.data.access);",
+									"        pm.collectionVariables.set(\"refresh_token\", jsonData.data.refresh);",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"kowlon@kowlon.com\",\n    \"password\": \"!Kowlon255\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{user_service_url}}/api/v1/login/",
+							"host": [
+								"{{user_service_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"login",
+								""
+							]
+						},
+						"description": "### Login\n\nThis endpoint allows users to log in and obtain access and refresh tokens.\n\n#### Request Body\n\n- `email` (string, required): The email of the user.\n- `password` (string, required): The password of the user.\n    \n\n#### Response\n\n- `data` (object): An object containing access and refresh tokens.\n    - `access` (string): The access token for authentication.\n    - `refresh` (string): The refresh token for obtaining new access tokens.\n- `message` (string): A message indicating the status of the login process.\n    \n\n#### Example Response\n\n``` json\n{\n    \"data\": {\n        \"access\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...\",\n        \"refresh\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...\"\n    },\n    \"message\": \"Logged in Successfully!\"\n}\n\n ```"
+					},
+					"response": [
+						{
+							"name": "Login - Success Response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"asdas@asd1.com\",\n    \"password\": \"12345678Uu@\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/v1/login/",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"login",
+										""
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 29 Dec 2023 07:41:26 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "405"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"data\": {\n        \"access\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjoiNjM3OWQ2M2YtM2M1NS00NDdlLTg2ODktZjMyMzZiYTFhNTM1IiwiZXhwIjoxNzA0NDQwNDg2fQ.YDEuR6vOErKytQ4EYX1j63wXUjvQJ3Pu5aiO_H-6yfc\",\n        \"refresh\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjoiNjM3OWQ2M2YtM2M1NS00NDdlLTg2ODktZjMyMzZiYTFhNTM1IiwiZXhwIjoxNzA1MDQ1Mjg2fQ.NntOga1FeWLzMztR19Z8Qy2dXMIzoHdK0TKxun2hdfM\"\n    },\n    \"message\": \"Logged in Successfully!\"\n}"
+						},
+						{
+							"name": "Login - Error Response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"asdas@as1.com\",\n    \"password\": \"12345678Uu@\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/v1/login/",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"login",
+										""
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 29 Dec 2023 07:45:09 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "65"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"User does not exists, Please check your credentials\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Refresh Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Set Tokens\", function () {",
+									"    if (pm.response.code === 200) {",
+									"        var jsonData = pm.response.json();",
+									"        pm.collectionVariables.set(\"access_token\", jsonData.data.access);",
+									"        pm.collectionVariables.set(\"refresh_token\", jsonData.data.refresh);",
+									"    }",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"refresh_token\": \"{{refresh_token}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{user_service_url}}/api/v1/refresh-token/",
+							"host": [
+								"{{user_service_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"refresh-token",
+								""
+							]
+						},
+						"description": "This HTTP POST request is used to refresh the access and refresh tokens. The request should include a JSON payload with a \"refresh_token\" key. The response will have a status code of 200, along with a JSON object containing the new \"access\" and \"refresh\" tokens, as well as a message confirming the successful re-issuance of the tokens.\n\nExample Response:\n\n``` json\n{\n    \"data\": {\n        \"access\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...\",\n        \"refresh\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...\"\n    },\n    \"message\": \"Tokens re-issued Successfully!\"\n}\n\n ```"
+					},
+					"response": [
+						{
+							"name": "Refresh Token - Error Response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"refresh_token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjoiNjM3OWQ2M2YtM2M1NS00NDdlLTg2ODktZjMyMzZiYTFhNTM1IiwiZXhwIjoxNzA0NDQwNTQ5fQ.-8b-c1SgBQRrREZee4lcIDcC6L3by0FVh2Dny-7r8a\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/v1/refresh-token/",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"refresh-token",
+										""
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 29 Dec 2023 07:46:10 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "45"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Error while issueing new tokens\"\n}"
+						},
+						{
+							"name": "Refresh Token - Success Response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"refresh_token\": \"{{refresh_token}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/v1/refresh-token/",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"refresh-token",
+										""
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 29 Dec 2023 07:46:37 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "412"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"data\": {\n        \"access\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjoiNjM3OWQ2M2YtM2M1NS00NDdlLTg2ODktZjMyMzZiYTFhNTM1IiwiZXhwIjoxNzA0NDQwNzk3fQ.XC7pL8rGw7SSGoZFLQjb1PGEYJ4shtQa38ZPDNHB3Ss\",\n        \"refresh\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkYXRhIjoiNjM3OWQ2M2YtM2M1NS00NDdlLTg2ODktZjMyMzZiYTFhNTM1IiwiZXhwIjoxNzA1MDQ1NTk3fQ.FsCwf1rhDmieAQV8Kao3Fv4Zi7pGYRGVIx1U7znttWA\"\n    },\n    \"message\": \"Tokens re-issued Successfully!\"\n}"
+						}
+					]
+				}
+			],
+			"description": "Contains all auth related APIs like: Register, Login, Refresh Token etc."
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Get user profile",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{user_service_url}}/api/v1/profile/",
+							"host": [
+								"{{user_service_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"profile",
+								""
+							]
+						},
+						"description": "### GET /api/v1/profile/\n\nThis endpoint retrieves the profile information.\n\n##### Example Response\n\n``` json\n{\n    \"data\": {\n        \"id\": \"6379d63f-3c55-447e-8689-f3236ba1a535\",\n        \"name\": \"asdsa\",\n        \"email\": \"asdas@asd1.com\"\n    }\n}\n\n ```"
+					},
+					"response": [
+						{
+							"name": "Get user profile - Success Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/api/v1/profile/",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"profile",
+										""
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 29 Dec 2023 08:32:46 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "94"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"data\": {\n        \"id\": \"6379d63f-3c55-447e-8689-f3236ba1a535\",\n        \"name\": \"asdsa\",\n        \"email\": \"asdas@asd1.com\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Update user profile",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"kowlon\",\n    \"email\": \"kowlon@kowlon.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{user_service_url}}/api/v1/profile/",
+							"host": [
+								"{{user_service_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"profile",
+								""
+							]
+						},
+						"description": "This HTTP PATCH request is used to update the profile details. The request should be sent to {{url}}/api/v1/profile/ with a raw request body. The request body should include the \"email\" and \"name\" fields to be updated.\n\n### Request Body\n\n- email (string, required): The new email for the profile.\n- name (string, required): The new name for the profile.\n    \n\n### Response\n\n- Status: 200 OK\n- data (object): An object containing the updated profile details.\n    - id (string): The unique identifier of the profile.\n    - name (string): The updated name of the profile.\n    - email (string): The updated email of the profile.\n- message (string): A message indicating the success of the profile update.\n    \n\n#### Example Response\n\n``` json\n{\n    \"data\": {\n        \"id\": \"6379d63f-3c55-447e-8689-f3236ba1a535\",\n        \"name\": \"asdsa\",\n        \"email\": \"asdas@asd1.com\"\n    },\n    \"message\": \"Profile details updated successfully!\"\n}\n\n ```"
+					},
+					"response": [
+						{
+							"name": "Update user profile - Error Response",
+							"originalRequest": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"asdas@asd.com\",\n    \"name\": \"asdsa\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/v1/profile/",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"profile",
+										""
+									]
+								}
+							},
+							"status": "Internal Server Error",
+							"code": 500,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 29 Dec 2023 08:32:07 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "57"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"User with this email address already exists\"\n}"
+						},
+						{
+							"name": "Update user profile - Success Response",
+							"originalRequest": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"asdas@asd1.com\",\n    \"name\": \"asdsa\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/v1/profile/",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"profile",
+										""
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 29 Dec 2023 08:32:27 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "144"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"data\": {\n        \"id\": \"6379d63f-3c55-447e-8689-f3236ba1a535\",\n        \"name\": \"asdsa\",\n        \"email\": \"asdas@asd1.com\"\n    },\n    \"message\": \"Profile details updated successfully!\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Change Password",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"old_password\": \"!Kowlon25\",\n    \"new_password\": \"!Kowlon255\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{user_service_url}}/api/v1/change-password/",
+							"host": [
+								"{{user_service_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"change-password",
+								""
+							]
+						},
+						"description": "This endpoint allows the user to change their password by sending an HTTP PUT request to the specified URL. The request should include the user's old password and the new password in the raw request body.\n\n### Request Body\n\n- old_password (string, required): The user's current password.\n- new_password (string, required): The new password to be set.\n    \n\n### Response\n\n- Status: 200 OK\n- message (string): A message indicating the result of the password change operation.\n    \n\n#### Example Response\n\n``` json\n{\n    \"message\": \"Password changed successfully!\"\n}\n\n ```"
+					},
+					"response": [
+						{
+							"name": "Change Password - Error Response",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"old_password\": \"12345678Uu\",\n    \"new_password\": \"12345678Uu@\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/v1/change-password/",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"change-password",
+										""
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 29 Dec 2023 08:37:59 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "53"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Invalid old password, Please try again.\"\n}"
+						},
+						{
+							"name": "Change Password - Success Response",
+							"originalRequest": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"old_password\": \"12345678Uu@\",\n    \"new_password\": \"12345679Uu@\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{url}}/api/v1/change-password/",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"change-password",
+										""
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 29 Dec 2023 08:38:42 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "44"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Password changed successfully!\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Delete user profile",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{user_service_url}}/api/v1/profile/",
+							"host": [
+								"{{user_service_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"profile",
+								""
+							]
+						},
+						"description": "# DELETE /api/v1/profile/\n\nThis endpoint is used to delete a user's profile.\n\n### Response\n\n- Status: 200\n- Body:\n    \n    ``` json\n      {\n          \"message\": \"Profile deleted successfully!\"\n      }\n    \n     ```"
+					},
+					"response": [
+						{
+							"name": "Delete user profile - Success Response",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/api/v1/profile/",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"profile",
+										""
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 29 Dec 2023 08:39:46 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "43"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Profile deleted successfully!\"\n}"
+						},
+						{
+							"name": "Delete user profile - Error Response",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/api/v1/profile/",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"profile",
+										""
+									]
+								}
+							},
+							"status": "Forbidden",
+							"code": 403,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Fri, 29 Dec 2023 08:40:01 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "34"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Something went wrong\"\n}"
+						}
+					]
+				}
+			],
+			"description": "Contain all user related APIs like: GET, Update or Delete user profile"
+		},
+		{
+			"name": "Internal APIs",
+			"item": [
+				{
+					"name": "Get User Data From Token",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"token\": \"{{access_token}}\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{user_service_url}}/internal/v1/token/",
+							"host": [
+								"{{user_service_url}}"
+							],
+							"path": [
+								"internal",
+								"v1",
+								"token",
+								""
+							]
+						},
+						"description": "### Create User Token\n\nThis endpoint allows the internal users to create a token.\n\n#### Request Body\n\n- token (string, required): The token to be provided.\n    \n\n#### Response\n\n- Status: 200 OK\n- data (object)\n    - id (string): The unique identifier of the user.\n    - name (string): The name of the user.\n    - email (string): The email address of the user.\n\n#### Example Response\n\n``` json\n{\n    \"data\": {\n        \"id\": \"d5ab452f-7f10-43a1-aea5-ff6642431f8b\",\n        \"name\": \"asdsa\",\n        \"email\": \"asdas@asd.com\"\n    }\n}\n\n ```"
+					},
+					"response": [
+						{
+							"name": "Error Response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"token\": \"{{access_token}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{user_service_url}}/internal/v1/token/",
+									"host": [
+										"{{user_service_url}}"
+									],
+									"path": [
+										"internal",
+										"v1",
+										"token",
+										""
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 30 Dec 2023 13:47:41 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "42"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Invalid authentication token\"\n}"
+						},
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"token\": \"{{access_token}}\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{user_service_url}}/internal/v1/token/",
+									"host": [
+										"{{user_service_url}}"
+									],
+									"path": [
+										"internal",
+										"v1",
+										"token",
+										""
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Sat, 30 Dec 2023 13:47:55 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "93"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"data\": {\n        \"id\": \"d5ab452f-7f10-43a1-aea5-ff6642431f8b\",\n        \"name\": \"asdsa\",\n        \"email\": \"asdas@asd.com\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Product Details",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"id\": \"8f688c30-1f7b-4b82-8132-ad8cbd49368b\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{product_service_url}}/internal/v1/product-details/",
+							"host": [
+								"{{product_service_url}}"
+							],
+							"path": [
+								"internal",
+								"v1",
+								"product-details",
+								""
+							]
+						},
+						"description": "## Product Details\n\nThis endpoint allows you to retrieve the details of a product by making an HTTP POST request to the specified URL.\n\n### Request Body\n\n- `id` (string, required): The unique identifier of the product.\n    \n\n### Response\n\n- `data` (object): The object containing the product details.\n    - `id` (string): The unique identifier of the product.\n    - `created_at` (string): The timestamp when the product was created.\n    - `modified_at` (string): The timestamp when the product was last modified.\n    - `name` (string): The name of the product.\n    - `price` (number): The price of the product.\n    - `description` (string): The description of the product.\n\n#### Example Response\n\n``` json\n{\n    \"data\": {\n        \"id\": \"168ce127-4108-4333-82de-b08d381beb20\",\n        \"created_at\": \"2024-01-01T07:35:22.975071Z\",\n        \"modified_at\": \"2024-01-01T07:35:22.975071Z\",\n        \"name\": \"saasdasd12\",\n        \"price\": 10,\n        \"description\": \"asdsdad\"\n    }\n}\n\n ```"
+					},
+					"response": [
+						{
+							"name": "Error Response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"id\": \"168ce127-4108-4333-82de-b08d381beb2\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{product_service_url}}/internal/v1/product-details/",
+									"host": [
+										"{{product_service_url}}"
+									],
+									"path": [
+										"internal",
+										"v1",
+										"product-details",
+										""
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 01 Jan 2024 08:12:44 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "39"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Invalid product ID format\"\n}"
+						},
+						{
+							"name": "Success Response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"id\": \"168ce127-4108-4333-82de-b08d381beb20\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{product_service_url}}/internal/v1/product-details/",
+									"host": [
+										"{{product_service_url}}"
+									],
+									"path": [
+										"internal",
+										"v1",
+										"product-details",
+										""
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 01 Jan 2024 08:12:58 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "196"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"data\": {\n        \"id\": \"168ce127-4108-4333-82de-b08d381beb20\",\n        \"created_at\": \"2024-01-01T07:35:22.975071Z\",\n        \"modified_at\": \"2024-01-01T07:35:22.975071Z\",\n        \"name\": \"saasdasd12\",\n        \"price\": 10,\n        \"description\": \"asdsdad\"\n    }\n}"
+						}
+					]
+				}
+			],
+			"description": "Contains all internal APIs which is used by the micro-services to pass data back & forth",
+			"auth": {
+				"type": "apikey",
+				"apikey": [
+					{
+						"key": "value",
+						"value": "{{internal_api_secret}}",
+						"type": "string"
+					},
+					{
+						"key": "key",
+						"value": "Secret",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Product",
+			"item": [
+				{
+					"name": "Create Product",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"saasdasd1\",\n    \"price\": 10,\n    \"description\": \"asdsdad\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{product_service_url}}/api/v1/product/",
+							"host": [
+								"{{product_service_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"product",
+								""
+							]
+						},
+						"description": "This endpoint allows you to create a new product by sending an HTTP POST request to {{product_service_url}}/api/v1/product/. The request should include a JSON payload in the raw request body type with the fields \"name\", \"price\", and \"description\".\n\n### Request Body\n\n- `name` (string): The name of the product.\n- `price` (number): The price of the product.\n- `description` (string): A description of the product.\n    \n\n### Response\n\nUpon a successful creation, the endpoint returns a status code 201 and a JSON response with the following structure:\n\n``` json\n{\n    \"data\": {\n        \"id\": \"e548cf02-e708-4657-b83d-42b732a8ffab\",\n        \"created_at\": \"2023-12-31T14:03:37.632623Z\",\n        \"modified_at\": \"2023-12-31T14:03:37.632623Z\",\n        \"name\": \"saasdasd1\",\n        \"price\": 10,\n        \"description\": \"asdsdad\"\n    },\n    \"message\": \"Product Created Successfully!\"\n}\n\n ```\n\nThe `data` object contains the details of the newly created product, including its unique identifier, creation timestamp, modification timestamp, name, price, and description. The `message` field provides a success message.\n\nIn case of an error, the response will include relevant error details."
+					},
+					"response": [
+						{
+							"name": "Create Product - Success Response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"saasdasd1\",\n    \"price\": 10,\n    \"description\": \"asdsdad\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{product_service_url}}/api/v1/product/",
+									"host": [
+										"{{product_service_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"product",
+										""
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 31 Dec 2023 14:03:37 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "237"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"data\": {\n        \"id\": \"e548cf02-e708-4657-b83d-42b732a8ffab\",\n        \"created_at\": \"2023-12-31T14:03:37.632623Z\",\n        \"modified_at\": \"2023-12-31T14:03:37.632623Z\",\n        \"name\": \"saasdasd1\",\n        \"price\": 10,\n        \"description\": \"asdsdad\"\n    },\n    \"message\": \"Product Created Successfully!\"\n}"
+						},
+						{
+							"name": "Create Product - Error Response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"saasdasd1\",\n    \"price\": 10\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{product_service_url}}/api/v1/product/",
+									"host": [
+										"{{product_service_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"product",
+										""
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 31 Dec 2023 14:04:29 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "50"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Error while parsing the request data\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Product Details",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{product_service_url}}/api/v1/product/8f688c30-1f7b-4b82-8132-ad8cbd49368b/",
+							"host": [
+								"{{product_service_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"product",
+								"8f688c30-1f7b-4b82-8132-ad8cbd49368b",
+								""
+							]
+						},
+						"description": "# Get Product Details\n\nThis API endpoint makes an HTTP GET request to retrieve the details of a specific product by providing its unique identifier in the URL.\n\n## Request\n\n- Method: GET\n- URL: `{{product_service_url}}/api/v1/product/da087a43-3c1c-40d5-a6b3-13299eecc509/`\n    \n\n## Response\n\n- Status: 201\n    \n\nExample Response Body:\n\n``` json\n{\n    \"data\": {\n        \"id\": \"da087a43-3c1c-40d5-a6b3-13299eecc509\",\n        \"created_at\": \"2023-12-31T14:21:49.231915Z\",\n        \"modified_at\": \"2023-12-31T14:21:49.231915Z\",\n        \"name\": \"saasdasd4\",\n        \"price\": 10,\n        \"description\": \"asdsdad\"\n    }\n}\n\n ```"
+					},
+					"response": [
+						{
+							"name": "Get Product Details - Error Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{product_service_url}}/api/v1/product/da087a43-3c1c-40d5-a6b3-13299eecc503/",
+									"host": [
+										"{{product_service_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"product",
+										"da087a43-3c1c-40d5-a6b3-13299eecc503",
+										""
+									]
+								}
+							},
+							"status": "Internal Server Error",
+							"code": 500,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 31 Dec 2023 14:22:59 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "34"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"something went wrong\"\n}"
+						},
+						{
+							"name": "Get Product Details - Success Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{product_service_url}}/api/v1/product/da087a43-3c1c-40d5-a6b3-13299eecc509/",
+									"host": [
+										"{{product_service_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"product",
+										"da087a43-3c1c-40d5-a6b3-13299eecc509",
+										""
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 31 Dec 2023 14:23:50 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "195"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"data\": {\n        \"id\": \"da087a43-3c1c-40d5-a6b3-13299eecc509\",\n        \"created_at\": \"2023-12-31T14:21:49.231915Z\",\n        \"modified_at\": \"2023-12-31T14:21:49.231915Z\",\n        \"name\": \"saasdasd4\",\n        \"price\": 10,\n        \"description\": \"asdsdad\"\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Update Product Details",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\": \"16saasdasd15\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{product_service_url}}/api/v1/product/96d91fca-9653-453b-9b49-115229f7a142/",
+							"host": [
+								"{{product_service_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"product",
+								"96d91fca-9653-453b-9b49-115229f7a142",
+								""
+							]
+						},
+						"description": "This endpoint allows you to update the details of a specific product using an HTTP PATCH request. The request should be sent to {{product_service_url}}/api/v1/product/da087a43-3c1c-40d5-a6b3-13299eecc509/. The request body should contain a JSON payload with the fields you want to update, such as \"name\".\n\n### Request Body\n\n- name (string, required): The updated name of the product.\n    \n\n### Response\n\nUpon a successful update, the endpoint will return a status code of 200 along with the updated details of the product in the response body.\n\n#### Response Body\n\n- data (object): An object containing the updated details of the product, including id, created_at, modified_at, name, price, and description.\n- message (string): A message confirming the successful update of the product details.\n    \n\n#### Example Response\n\n``` json\n{\n    \"data\": {\n        \"id\": \"da087a43-3c1c-40d5-a6b3-13299eecc509\",\n        \"created_at\": \"2023-12-31T14:21:49.231915Z\",\n        \"modified_at\": \"2023-12-31T14:42:19.218467Z\",\n        \"name\": \"saasdasd567\",\n        \"price\": 10,\n        \"description\": \"asdsdad\"\n    },\n    \"message\": \"Product details updated Successfully!\"\n}\n\n ```"
+					},
+					"response": [
+						{
+							"name": "Update Product Details - Error Response",
+							"originalRequest": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"saasdasd567\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{product_service_url}}/api/v1/product/da087a43-3c1c-40d5-a6b3-13299eecc50/",
+									"host": [
+										"{{product_service_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"product",
+										"da087a43-3c1c-40d5-a6b3-13299eecc50",
+										""
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 31 Dec 2023 14:41:44 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "32"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Invalid product ID\"\n}"
+						},
+						{
+							"name": "Update Product Details - Success Response",
+							"originalRequest": {
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"saasdasd567\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{product_service_url}}/api/v1/product/da087a43-3c1c-40d5-a6b3-13299eecc509/",
+									"host": [
+										"{{product_service_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"product",
+										"da087a43-3c1c-40d5-a6b3-13299eecc509",
+										""
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 31 Dec 2023 14:42:19 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "247"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"data\": {\n        \"id\": \"da087a43-3c1c-40d5-a6b3-13299eecc509\",\n        \"created_at\": \"2023-12-31T14:21:49.231915Z\",\n        \"modified_at\": \"2023-12-31T14:42:19.218467Z\",\n        \"name\": \"saasdasd567\",\n        \"price\": 10,\n        \"description\": \"asdsdad\"\n    },\n    \"message\": \"Product details updated Successfully!\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Delete Product",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{product_service_url}}/api/v1/product/96d91fca-9653-453b-9b49-115229f7a142/",
+							"host": [
+								"{{product_service_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"product",
+								"96d91fca-9653-453b-9b49-115229f7a142",
+								""
+							]
+						},
+						"description": "This HTTP DELETE request is used to delete a specific product by providing the product ID in the URL. The request does not contain a request body.\n\n### Request\n\n- Method: DELETE\n- URL: {{product_service_url}}/api/v1/product/da087a43-3c1c-40d5-a6b3-13299eecc509/\n    \n\n### Response\n\n- Status: 200\n- Body:\n    \n    ``` json\n    {\n        \"message\": \"Product deleted successfully!\"\n    }\n    \n     ```\n    \n\nThis request returns a status code of 200 upon successful deletion of the product, along with a message indicating the success of the operation."
+					},
+					"response": [
+						{
+							"name": "Delete Product - Error Response",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{product_service_url}}/api/v1/product/da087a43-3c1c-40d5-a6b3-13299eecc50/",
+									"host": [
+										"{{product_service_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"product",
+										"da087a43-3c1c-40d5-a6b3-13299eecc50",
+										""
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 31 Dec 2023 14:43:38 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "32"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Invalid product ID\"\n}"
+						},
+						{
+							"name": "Delete Product - Success Response",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{product_service_url}}/api/v1/product/da087a43-3c1c-40d5-a6b3-13299eecc509/",
+									"host": [
+										"{{product_service_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"product",
+										"da087a43-3c1c-40d5-a6b3-13299eecc509",
+										""
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 31 Dec 2023 14:44:03 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "43"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Product deleted successfully!\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Product List",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{product_service_url}}/api/v1/product/?offset=0",
+							"host": [
+								"{{product_service_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"product",
+								""
+							],
+							"query": [
+								{
+									"key": "offset",
+									"value": "0"
+								}
+							]
+						},
+						"description": "# Product List Retrieval\n\nThis endpoint retrieves a list of products with optional pagination by providing an offset parameter in the query.\n\n## Request\n\n### Endpoint\n\n`GET /api/v1/product/`\n\n### Query Parameters\n\n- `offset` (integer, optional): Specifies the number of items to skip before starting to return results.\n    \n\n## Response\n\n- `results` (array): An array containing the details of the retrieved products.\n    - `id` (string): The unique identifier of the product.\n    - `name` (string): The name of the product.\n    - `price` (number): The price of the product.\n    - `description` (string): The description of the product.\n\n### Example Response\n\n``` json\n{\n    \"results\": [\n        {\n            \"id\": \"5bcb47f4-8736-4e2a-be5d-06b2a1d36a93\",\n            \"name\": \"saasdasd\",\n            \"price\": 10,\n            \"description\": \"asdsdad\"\n        },\n        {\n            \"id\": \"b6a50353-9d32-498d-8840-cb3b4fbff4ae\",\n            \"name\": \"saasdasd1\",\n            \"price\": 10,\n            \"description\": \"asdsdad\"\n        },\n        ...\n    ]\n}\n\n ```"
+					},
+					"response": [
+						{
+							"name": "Get Product List - Success Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{product_service_url}}/api/v1/product/",
+									"host": [
+										"{{product_service_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"product",
+										""
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 31 Dec 2023 15:05:24 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "1012"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"results\": [\n        {\n            \"id\": \"5bcb47f4-8736-4e2a-be5d-06b2a1d36a93\",\n            \"name\": \"saasdasd\",\n            \"price\": 10,\n            \"description\": \"asdsdad\"\n        },\n        {\n            \"id\": \"b6a50353-9d32-498d-8840-cb3b4fbff4ae\",\n            \"name\": \"saasdasd1\",\n            \"price\": 10,\n            \"description\": \"asdsdad\"\n        },\n        {\n            \"id\": \"72f84512-38ff-4286-bb80-bd49ca3f4501\",\n            \"name\": \"saasdasd2\",\n            \"price\": 10,\n            \"description\": \"asdsdad\"\n        },\n        {\n            \"id\": \"65cc657b-1fc7-4fbd-913e-692ad6af574c\",\n            \"name\": \"saasdasd3\",\n            \"price\": 10,\n            \"description\": \"asdsdad\"\n        },\n        {\n            \"id\": \"714fe01c-4577-43f4-8178-b05d5574450f\",\n            \"name\": \"saasdasd4\",\n            \"price\": 10,\n            \"description\": \"asdsdad\"\n        },\n        {\n            \"id\": \"88696495-8fbc-426d-bbc5-4e017b05866b\",\n            \"name\": \"saasdasd5\",\n            \"price\": 10,\n            \"description\": \"asdsdad\"\n        },\n        {\n            \"id\": \"0f4dbbc4-4702-47b8-a4db-23b33d1b2486\",\n            \"name\": \"saasdasd6\",\n            \"price\": 10,\n            \"description\": \"asdsdad\"\n        },\n        {\n            \"id\": \"0b2f0af4-93fe-441a-b67e-c8d36d67fa28\",\n            \"name\": \"saasdasd7\",\n            \"price\": 10,\n            \"description\": \"asdsdad\"\n        },\n        {\n            \"id\": \"5e6c0a5e-5fec-466f-9179-56c1a5916255\",\n            \"name\": \"saasdasd8\",\n            \"price\": 10,\n            \"description\": \"asdsdad\"\n        },\n        {\n            \"id\": \"62670330-79d7-4207-8bac-1c1b1b7f9584\",\n            \"name\": \"saasdasd9\",\n            \"price\": 10,\n            \"description\": \"asdsdad\"\n        }\n    ]\n}"
+						}
+					]
+				}
+			],
+			"description": "Contains all product CRUD related APIs"
+		},
+		{
+			"name": "Order",
+			"item": [
+				{
+					"name": "Create Order",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"product_id\": \"168ce127-4108-4333-82de-b08d381beb20\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{order_service_url}}/api/v1/order/",
+							"host": [
+								"{{order_service_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"order",
+								""
+							]
+						},
+						"description": "This API endpoint allows you to create a new order by sending an HTTP POST request to the specified URL. The request should include a payload in the raw request body type with the \"product_id\" key.\n\nUpon successful execution, the API will respond with a status code of 200 and a JSON object containing the details of the newly created order, including its ID, creation and modification timestamps, as well as the associated product's details such as ID, creation and modification timestamps, name, price, and description.\n\nExample Response:\n\n``` json\n{\n    \"data\": {\n        \"id\": \"22e5722d-6888-413a-b4bd-349c88a95ef8\",\n        \"created_at\": \"2024-01-01T12:26:55.918857Z\",\n        \"modified_at\": \"2024-01-01T12:26:55.918857Z\",\n        \"product\": {\n            \"id\": \"168ce127-4108-4333-82de-b08d381beb20\",\n            \"created_at\": \"2024-01-01T07:35:22.975071Z\",\n            \"modified_at\": \"2024-01-01T07:35:22.975071Z\",\n            \"name\": \"saasdasd12\",\n            \"price\": 10,\n            \"description\": \"asdsdad\"\n        }\n    }\n}\n\n ```"
+					},
+					"response": [
+						{
+							"name": "Create Order - Success Response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"product_id\": \"168ce127-4108-4333-82de-b08d381beb20\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{order_service_url}}/api/v1/order/",
+									"host": [
+										"{{order_service_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"order",
+										""
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 01 Jan 2024 12:26:55 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "339"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"data\": {\n        \"id\": \"22e5722d-6888-413a-b4bd-349c88a95ef8\",\n        \"created_at\": \"2024-01-01T12:26:55.918857Z\",\n        \"modified_at\": \"2024-01-01T12:26:55.918857Z\",\n        \"product\": {\n            \"id\": \"168ce127-4108-4333-82de-b08d381beb20\",\n            \"created_at\": \"2024-01-01T07:35:22.975071Z\",\n            \"modified_at\": \"2024-01-01T07:35:22.975071Z\",\n            \"name\": \"saasdasd12\",\n            \"price\": 10,\n            \"description\": \"asdsdad\"\n        }\n    }\n}"
+						},
+						{
+							"name": "Create Order - Error Response",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"product_id\": \"168ce127-4108-4333-82de-b08d381beb21\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{order_service_url}}/api/v1/order/",
+									"host": [
+										"{{order_service_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"order",
+										""
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 01 Jan 2024 12:27:30 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "32"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Invalid product id\"\n}"
+						}
+					]
+				},
+				{
+					"name": "GET Order List",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{order_service_url}}/api/v1/order/?offset=0",
+							"host": [
+								"{{order_service_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"order",
+								""
+							],
+							"query": [
+								{
+									"key": "offset",
+									"value": "0"
+								}
+							]
+						},
+						"description": "This endpoint makes an HTTP GET request to retrieve a list of orders. The request should include the 'offset' parameter to specify the starting point for fetching the orders.\n\nThe response to this request will have a status code of 200, and it will contain an array of 'results', where each result includes the 'id' and 'product_id' of an order.\n\nHere is an example of the response:\n\n``` json\n{\n    \"results\": [\n        {\n            \"id\": \"1c37234f-6177-4410-8cc4-98afa05432a1\",\n            \"product_id\": \"351e74f5-07a3-447a-81ea-35e4a6ed0898\"\n        },\n        {\n            \"id\": \"4b256005-312d-4b9c-9174-58fc6120b587\",\n            \"product_id\": \"351e74f5-07a3-447a-81ea-35e4a6ed0898\"\n        },\n        {\n            \"id\": \"22e5722d-6888-413a-b4bd-349c88a95ef8\",\n            \"product_id\": \"168ce127-4108-4333-82de-b08d381beb20\"\n        }\n    ]\n}\n\n ```"
+					},
+					"response": [
+						{
+							"name": "GET Order List - Success Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{order_service_url}}/api/v1/order/?offset=0",
+									"host": [
+										"{{order_service_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"order",
+										""
+									],
+									"query": [
+										{
+											"key": "offset",
+											"value": "0"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 01 Jan 2024 13:03:39 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "307"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"results\": [\n        {\n            \"id\": \"1c37234f-6177-4410-8cc4-98afa05432a1\",\n            \"product_id\": \"351e74f5-07a3-447a-81ea-35e4a6ed0898\"\n        },\n        {\n            \"id\": \"4b256005-312d-4b9c-9174-58fc6120b587\",\n            \"product_id\": \"351e74f5-07a3-447a-81ea-35e4a6ed0898\"\n        },\n        {\n            \"id\": \"22e5722d-6888-413a-b4bd-349c88a95ef8\",\n            \"product_id\": \"168ce127-4108-4333-82de-b08d381beb20\"\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "GET Order Details",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{order_service_url}}/api/v1/order/638785db-bb8a-4dad-8e32-2ae574e8074d/",
+							"host": [
+								"{{order_service_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"order",
+								"638785db-bb8a-4dad-8e32-2ae574e8074d",
+								""
+							]
+						},
+						"description": "This HTTP GET request retrieves details of a specific order from the server. The request should be made to {{order_service_url}}/api/v1/order/1c37234f-6177-4410-8cc4-98afa05432a1/ with no request body.\n\nThe response will have a status code of 200, and the body will contain the details of the order, including the order ID, creation and modification timestamps, and information about the associated product such as its ID, creation and modification timestamps, name, price, and description.\n\nHere is an example of the response:\n\n``` json\n{\n    \"data\": {\n        \"id\": \"1c37234f-6177-4410-8cc4-98afa05432a1\",\n        \"created_at\": \"2024-01-01T12:26:00.013278Z\",\n        \"modified_at\": \"2024-01-01T12:26:00.013278Z\",\n        \"product\": {\n            \"id\": \"351e74f5-07a3-447a-81ea-35e4a6ed0898\",\n            \"created_at\": \"2024-01-01T07:35:21.674963Z\",\n            \"modified_at\": \"2024-01-01T07:35:21.674963Z\",\n            \"name\": \"saasdasd11\",\n            \"price\": 10,\n            \"description\": \"asdsdad\"\n        }\n    }\n}\n\n ```"
+					},
+					"response": [
+						{
+							"name": "GET Order Details - Error Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{order_service_url}}/api/v1/order/1c37234f-6177-4410-8cc4-98afa05432a2/",
+									"host": [
+										"{{order_service_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"order",
+										"1c37234f-6177-4410-8cc4-98afa05432a2",
+										""
+									]
+								}
+							},
+							"status": "Internal Server Error",
+							"code": 500,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 01 Jan 2024 13:05:21 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "34"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"something went wrong\"\n}"
+						},
+						{
+							"name": "GET Order Details - Success Response",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{order_service_url}}/api/v1/order/1c37234f-6177-4410-8cc4-98afa05432a1/",
+									"host": [
+										"{{order_service_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"order",
+										"1c37234f-6177-4410-8cc4-98afa05432a1",
+										""
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 01 Jan 2024 13:05:50 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "339"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"data\": {\n        \"id\": \"1c37234f-6177-4410-8cc4-98afa05432a1\",\n        \"created_at\": \"2024-01-01T12:26:00.013278Z\",\n        \"modified_at\": \"2024-01-01T12:26:00.013278Z\",\n        \"product\": {\n            \"id\": \"351e74f5-07a3-447a-81ea-35e4a6ed0898\",\n            \"created_at\": \"2024-01-01T07:35:21.674963Z\",\n            \"modified_at\": \"2024-01-01T07:35:21.674963Z\",\n            \"name\": \"saasdasd11\",\n            \"price\": 10,\n            \"description\": \"asdsdad\"\n        }\n    }\n}"
+						}
+					]
+				},
+				{
+					"name": "Delete Order",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{order_service_url}}/api/v1/order/f09aaff6-de80-494f-ae58-6b99f45dc30d/",
+							"host": [
+								"{{order_service_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"order",
+								"f09aaff6-de80-494f-ae58-6b99f45dc30d",
+								""
+							]
+						},
+						"description": "\nThis HTTP DELETE request is used to delete a specific order by providing the order ID in the URL. The request does not require a request body.\n\n### Request\n\n- Method: DELETE\n- URL: `{{order_service_url}}/api/v1/order/22e5722d-6888-413a-b4bd-349c88a95ef8/`\n\n### Response\n\n- Status: 200\n- Body:\n\n```json\n{\n    \"message\": \"Order deleted successfully!\"\n}\n```\n"
+					},
+					"response": [
+						{
+							"name": "Delete Order - Error Response",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{order_service_url}}/api/v1/order/1c37234f-6177-4410-8cc4-98afa05432a3/",
+									"host": [
+										"{{order_service_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"order",
+										"1c37234f-6177-4410-8cc4-98afa05432a3",
+										""
+									]
+								}
+							},
+							"status": "Internal Server Error",
+							"code": 500,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 01 Jan 2024 13:40:53 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "34"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"something went wrong\"\n}"
+						},
+						{
+							"name": "Delete Order - Success Response",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{order_service_url}}/api/v1/order/4b256005-312d-4b9c-9174-58fc6120b587/",
+									"host": [
+										"{{order_service_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"order",
+										"4b256005-312d-4b9c-9174-58fc6120b587",
+										""
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=utf-8"
+								},
+								{
+									"key": "Date",
+									"value": "Mon, 01 Jan 2024 13:41:25 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "41"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"message\": \"Order deleted successfully!\"\n}"
+						}
+					]
+				}
+			],
+			"description": "Contains order related CRUD APIs"
+		},
+		{
+			"name": "Health Check",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{product_service_url}}/health-check/",
+					"host": [
+						"{{product_service_url}}"
+					],
+					"path": [
+						"health-check",
+						""
+					]
+				},
+				"description": "This endpoint makes an HTTP GET request to {{url}}/health-check/ to perform a health check. The request does not include a request body.\n\n### Response\n\n- Status: 200\n\n``` json\n{ \"message\": \"up and running\" }\n\n ```"
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{access_token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "user_service_url",
+			"value": "http://localhost:8001",
+			"type": "string"
+		},
+		{
+			"key": "product_service_url",
+			"value": "http://localhost:8002",
+			"type": "string"
+		},
+		{
+			"key": "order_service_url",
+			"value": "http://localhost:8003",
+			"type": "string"
+		},
+		{
+			"key": "access_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "refresh_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "internal_api_secret",
+			"value": "1234_secret_4321",
+			"type": "string"
+		}
+	]
+}

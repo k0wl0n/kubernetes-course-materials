@@ -9,7 +9,7 @@ spec:
     - grafana.apps.kowlon.my.id
     - grafana
   gateways:
-    - production/apps
+    - istio-system/apps
   http:
     - match: 
         - uri:

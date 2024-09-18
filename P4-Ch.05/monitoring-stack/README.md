@@ -3,7 +3,7 @@
 * install logging/loki
 * install logging/promtail
 * install metrics/node_exporter
-* install metrics/ksm
+* install metrics/kube-state-metrics
 * install metrics/vmagent
 * install metrics/vmcluster
 * Install visualize/grafana

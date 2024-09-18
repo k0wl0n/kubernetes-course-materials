@@ -1,5 +1,6 @@
 
-terraform ini
+terraform init
+terraform plan
 terraform apply
 
 
@@ -9,13 +10,13 @@ vault operator init
 save unseal key, example
 
 ```
-Unseal Key 1: 
-Unseal Key 2: 
-Unseal Key 3: 
-Unseal Key 4: 
-Unseal Key 5: 
+Unseal Key 1: 8fS0ZzjQZyQ5fDnDzbR8Uf6BeyQjxY/U5v2MItKuavkT
+Unseal Key 2: h3CLUn6gqDWhANZdFMTSPeWC15H7jCcfgZmvmCh44MVM
+Unseal Key 3: 7SXHJpV7MAgTlv/7lPAoTM4jgCdCVFqcYAh4St4LwtRb
+Unseal Key 4: uL8oo1djcXBhIUYF0tVTqH5vUr8mmKbRODpJX40usP6s
+Unseal Key 5: S8RcyP0JwSrAe8VOjyjoWKM6DztS44C6lCQHy9cuUD76
 
-Initial Root Token: 
+Initial Root Token: hvs.JBzCHZmWHSq5dW3cDIjkocey
 
 Vault initialized with 5 key shares and a key threshold of 3. Please securely
 distribute the key shares printed above. When the Vault is re-sealed,
@@ -37,8 +38,8 @@ insert 3 unseal key
 
 ## setup root token
 
-export VAULT_TOKEN
-export VAULT_ADDRESS=localhost:8200  
+export VAULT_TOKEN=hvs.JBzCHZmWHSq5dW3cDIjkocey
+export VAULT_ADDRESS=http://localhost:8200  
 
 
 ## create secret internal
@@ -104,6 +105,10 @@ path "internal/data/production*" {
    capabilities = ["read"]
 }
 EOF
+
+internal/data/production/ecommerce-user
+internal/data/production/ecommerce-product
+internal/data/production/ecommerce-order
 
 ## assign permision
 

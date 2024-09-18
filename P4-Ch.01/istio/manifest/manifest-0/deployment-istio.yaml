@@ -9,7 +9,7 @@ spec:
   selector:
     matchLabels:
       app: echov3
-      version: v2
+      version: v3
   template:
     metadata:
       labels:

@@ -4,7 +4,7 @@ resource "helm_release" "redis_operator" {
   create_namespace  = true
 
   repository        = "https://ot-container-kit.github.io/helm-charts/"
-  chart             = "redis-operator"  # Corrected chart name
+  chart             = "redis-operator" 
   version           = "0.18.0"
 
 }

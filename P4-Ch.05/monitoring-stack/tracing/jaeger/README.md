@@ -2,7 +2,6 @@
 ```
 helm repo add jaegertracing https://jaegertracing.github.io/helm-charts
 helm repo update
-helm show values jaegertracing/jaeger > values.yaml
 helm upgrade --install jaeger jaegertracing/jaeger -f values.yaml
 
 option installation

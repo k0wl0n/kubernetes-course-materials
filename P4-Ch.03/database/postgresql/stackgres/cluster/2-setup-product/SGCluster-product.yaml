@@ -2,7 +2,7 @@ apiVersion: stackgres.io/v1
 kind: SGCluster
 metadata:
   namespace: postgresql
-  name: postgresql-user-product
+  name: postgresql-product-service
 spec:
   postgres:
     version: '14.10'

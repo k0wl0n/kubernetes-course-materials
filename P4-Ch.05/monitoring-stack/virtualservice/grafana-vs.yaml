@@ -7,7 +7,7 @@ spec:
   hosts:
     - grafana.apps.kowlon.my.id
   gateways:
-    - production/apps
+    - istio-system/apps
   http:
     - match: 
         - uri:   

@@ -25,6 +25,11 @@ go to folder cert-manager
 kubectl apply -f cert-manager.yaml
 ```
 
+# register cert manager to wildcard *.apps.kowlon.my.id
+echo1.apps.kowlon.my.id
+echo2.apps.kowlon.my.id
+echo10.apps.kowlon.my.id
+
 create token cloudflare api
 reffer to this docs P4-Ch.01/istio/gateway/cloudflare-token.md
 after you have api token
@@ -77,6 +82,21 @@ and apply again
 kubectl apply -f 2-gateway.yaml
 ```
 
+# register istio ingress from LB to cloudflare
+*.apps.kowlon.my.id
+
+ kubectl get svc -n istio-ingress  
+ get external-ip
+ contoh: ad6c46c39632244459cd887585743a0d-954344150.ap-southeast-1.elb.amazonaws.com
+
+ add to DNS in yuur domain panel on cloudflare
+
+ add TYPE CNAME
+ add name *.apps.kowlon.my.id
+ add external-ip ad6c46c39632244459cd887585743a0d-954344150.ap-southeast-1.elb.amazonaws.com
+
+ and save
+
 
 ### 4. Apply Kubernetes Manifests
 
@@ -88,7 +108,12 @@ kubectl apply -f P4-Ch.01/istio/manifest/manifest-0/deployment.yaml
 kubectl apply -f P4-Ch.01/istio/manifest/manifest-0/deployment-istio.yaml
 ```
 
-and see deployment echov2 has no istio-proxy injected
+kubectl get pods -n default
+
+kubectl get pod echov2-d69b85f64-czv8h -o jsonpath='{.spec.containers[*].name}' -n default
+kubectl get pod echov3-54966b7b57-hvk2f -o jsonpath='{.spec.containers[*].name}' -n default
+
+and see deployment echov3 has no istio-proxy injected
 
 #### Install Manifest 1
 
@@ -96,6 +121,9 @@ Apply the manifest for your application setup:
 ```bash
 kubectl apply -f P4-Ch.01/istio/manifest/manifest-1
 ```
+### Flow ingress istio
+
+domain name -> Loadbalancer ( gateway) -> virtual service -> service -> deployment -> pod
 
 #### Test Access from a Client Pod
 
@@ -108,28 +136,4 @@ while true; do curl echo1.production:8080/ && echo "" && sleep 1; done
 To check the pods in the Istio Ingress namespace:
 ```bash
 kubectl get pods -n istio-ingress --show-labels
-```
-
-
-#### Apply Certificate Manifest
-
-To apply your HTTPS certificate:
-```bash
-kubectl apply -f manifest-2/7-certificate.yaml
-```
-
-
-
-### 7. Verify DNS Setup
-
-To check if your domain is correctly pointing to the cluster IP:
-```bash
-dig +short k8s.kowlon.my.id
-```
-
-### 8. Apply Manifest 2
-
-Apply the second set of manifests:
-```bash
-kubectl apply -f manifest/manifest-2
 ```

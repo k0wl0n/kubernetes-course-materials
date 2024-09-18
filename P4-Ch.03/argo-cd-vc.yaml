@@ -9,7 +9,7 @@ spec:
     - argocd.apps.kowlon.my.id
     - argocd
   gateways:
-    - production/apps
+    - istio-system/apps
   http:
     - match: 
         - uri:

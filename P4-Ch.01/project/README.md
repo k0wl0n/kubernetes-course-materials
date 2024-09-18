@@ -5,6 +5,7 @@
 - **Credentials with admin role**:
   - AWS IAM `access_key`
   - AWS IAM `secret_key`
+  - aws cli
 
 - **Recommended for Windows**:
   - Install [WSL 2](https://learn.microsoft.com/en-us/windows/wsl/install) (You can follow [this guide](https://www.youtube.com/watch?v=vxTW22y8zV8))

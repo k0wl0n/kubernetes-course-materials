@@ -982,7 +982,7 @@ esLookback:
 # End: Default values for the various components of Jaeger
 
 hotrod:
-  enabled: false
+  enabled: true
   podSecurityContext: {}
   securityContext: {}
   replicaCount: 1

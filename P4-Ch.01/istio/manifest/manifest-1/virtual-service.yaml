@@ -9,7 +9,7 @@ spec:
     - echo1.apps.kowlon.my.id
     - echo1
   gateways:
-    - apps
+    - istio-system/apps
   http:
     - match: 
         - uri:

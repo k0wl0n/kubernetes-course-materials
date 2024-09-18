@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  redis-users:
+    image: redis:latest
+    container_name: redis-users
+    ports:
+      - "6379:6379"  # Expose Redis for users on default port
+    networks:
+      - app-network
+    volumes:
+      - redis-users-data:/data
+    restart: always
+
+  redis-products:
+    image: redis:latest
+    container_name: redis-products
+    ports:
+      - "6380:6379"  # Expose Redis for products on port 6380
+    networks:
+      - app-network
+    volumes:
+      - redis-products-data:/data
+    restart: always
+
+  redis-order:
+    image: redis:latest
+    container_name: redis-order
+    ports:
+      - "6381:6379"  # Expose Redis for products on port 6381
+    networks:
+      - app-network
+    volumes:
+      - redis-order-data:/data
+    restart: always
+
+
+volumes:
+  redis-users-data:
+  redis-products-data:
+  redis-order-data:
+
+networks:
+  app-network:
+    driver: bridge
