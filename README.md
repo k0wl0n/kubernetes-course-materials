@@ -75,7 +75,7 @@ The repository is organized into several chapters, each focusing on different as
 
 2. **Change into a chapter directory to explore the examples and manifests:**
     ```bash
-    cd kubernetes-course-materials/P2-Ch.04/P2-Ch.04-2-5.Pods  # example
+    cd kubernetes-course-materials/P2-Ch.04/P2-Ch.04-2-5.Pods
     ```
 
 3. **Apply the Kubernetes manifests using `kubectl`:**
