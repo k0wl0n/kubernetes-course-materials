@@ -68,12 +68,12 @@ The repository is organized into several chapters, each focusing on different as
 
 1. **Clone the repository to your local machine:**
     ```bash
-    git clone https://github.com/k0wl0n/kubernetes-course-manifest.git
+    git clone https://github.com/k0wl0n/kubernetes-course-materials.git
     ```
 
 2. **Navigate to the desired chapter and sub-chapter to explore the examples and manifests:**
     ```bash
-    cd kubernetes-manifest/P2-Ch.04/P2-Ch.04-2-5.Pods
+    cd kubernetes-course-materials/P2-Ch.04/P2-Ch.04-2-5.Pods
     ```
 
 3. **Apply the Kubernetes manifests using `kubectl`:**
