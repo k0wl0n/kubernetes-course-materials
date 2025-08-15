@@ -1,94 +1,60 @@
 # Kubernetes Manifest Repository
 
-This repository contains Kubernetes manifests organized by chapter and topic.
-Each directory includes example configurations that highlight specific Kubernetes features and concepts.
+A collection of Kubernetes manifests arranged by chapter and topic. The materials were
+originally created for the Fast Campus course **Docker & Kubernetes from Containerization to Real-World Applications (ft. AWS EKS)**,
+but the examples are free to use for anyone exploring Kubernetes.
 
-## Course: Docker & Kubernetes from Containerization to Real-World Applications (ft. AWS EKS)
+Fast Campus is Korea's leading edutech company with over 930,000 members and
+high-quality online lectures for working professionals in Indonesia and beyond.
 
-🔗 Find the full course here: [Course Link](https://abit.ly/1poqhq)
+## Contents
 
-This course takes you from containerization basics to real-world application implementation with AWS EKS.
-It is ideal for anyone looking to build DevOps skills and master Kubernetes in a practical context.
+Each chapter directory contains YAML manifests that can be applied directly with `kubectl` or
+adapted for your own experiments.
 
-### What will you learn?
+### P2 – Kubernetes Fundamentals
 
-- The basics of Docker and Kubernetes
-- Building and managing Kubernetes clusters using Terraform and AWS
-- Building CICD pipeline for Software Development Life Cycle using GitHub Actions
-- Kubernetes observability with tools like Grafana, Loki, and Jaeger
-- Real-world Go application implementation with AWS EKS
+- **Ch.02** – Introduction to Kubernetes basics.
+- **Ch.03** – Building Docker images with the `go-echo` example application (`go-echo`, `go-echo-v1`, `go-echo-v2`, `go-echo-v3`).
+- **Ch.04** – Core workloads: Pods, ReplicaSets, Deployments, DaemonSets, Jobs, CronJobs,
+  StatefulSets, rollouts/rollbacks (`go-echo-v4`), ConfigMaps, Secrets, HPAs, resource
+  limits and scheduling.
+- **Ch.05** – Networking: pod connectivity, ClusterIP, NodePort, LoadBalancer and Ingress controllers.
+- **Ch.06** – Storage: storage classes and persistent volumes.
 
-### About Fast Campus
+### P3 – CI/CD & Observability
 
-Fast Campus is Korea's No. 1 edutech company with over 930,000 cumulative members. Recently, Fast Campus launched in Indonesia with many high-quality online lectures for working professionals.
+- **Ch.01** – Terraform configurations for infrastructure setup.
+- **Ch.02** – Argo CD, ECR, CI/CD pipelines, monitoring stack and SSH key management.
 
-## Directory Structure
+### P4 – Production Cluster Examples
 
-The repository is organized into several chapters, each focusing on different aspects of Kubernetes.
+- **Ch.01–05** – End‑to‑end EKS cluster setup, Istio service mesh, Vault integration and other production tools.
 
-## Chapters and Topics
+## Getting Started
 
-### P2-Ch.02
-- **P2-Ch.02-2**: Introduction to Kubernetes basics.
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/k0wl0n/kubernetes-course-materials.git
+   cd kubernetes-course-materials
+   ```
 
-### P2-Ch.03
-- **P2-Ch.03-1-3.Docker Image**: Building and managing Docker images.
-  - `go-echo`: Basic Go application.
-  - `go-echo-v1`: First version of the Go echo application.
-  - `go-echo-v2`: Second version with enhancements.
-  - `go-echo-v3`: Third version with additional features.
+2. **Navigate to an example**
+   ```bash
+   cd P2-Ch.04/P2-Ch.04-2-5.Pods
+   ```
 
-### P2-Ch.04
-- **P2-Ch.04-2-5.Pods**: Basic pod management and configuration.
-- **P2-Ch.04-6.ReplicaSet**: Ensuring the availability of pod replicas.
-- **P2-Ch.04-7-8.Deployment**: Managing Deployments.
-  - `go-echo-v3`: Example Deployment using the `go-echo-v3` app.
-- **P2-Ch.04-9-10.DaemonSet**: Configuration and use cases for DaemonSets.
-- **P2-Ch.04-11-12.Job**: Running batch Jobs in Kubernetes.
-- **P2-Ch.04-13-14.CronJob**: Scheduling recurring tasks using CronJobs.
-- **P2-Ch.04-15-16.Statefulset**: Managing stateful applications with StatefulSets.
-- **P2-Ch.04-17.RolloutRollback**: Rollout and rollback strategies.
-  - `go-echo-v4`: Example for demonstrating rollout and rollback.
-- **P2-Ch.04-18-19.ConfigMap**: Using ConfigMaps to manage configuration data.
-- **P2-Ch.04-20.Secret**: Storing and managing sensitive information with Secrets.
-- **P2-Ch.04-21.HPA**: Horizontal Pod Autoscaling for workload management.
-- **P2-Ch.04-22.Mengelola Resource Limits**: Managing resource limits for pods.
-- **P2-Ch.04-23.Pengelolaan Scheduling Pod**: Advanced pod scheduling techniques.
+3. **Apply a manifest**
+   ```bash
+   kubectl apply -f <manifest>.yaml
+   ```
 
-### P2-Ch.05
-- **P2-Ch.05-1.Memahami Konektivitas Pod**: Understanding pod connectivity.
-- **P2-Ch.05-2.Layanan ClusterIP**: ClusterIP services for internal communication.
-- **P2-Ch.05-3.Layanan NodePort**: Exposing services using NodePort.
-- **P2-Ch.05-4.Layanan LoadBalancer**: Load balancing external traffic.
-- **P2-Ch.05-5.Pengenalan Pengendali Ingress**: Introduction to Ingress controllers.
-
-### P2-Ch.06
-- **P2-Ch.06-2.Mengkonfigurasi Storage Class**: Configuring storage classes in Kubernetes.
-- **P2-Ch.06-4.Bekerja dengan Persistance Volume**: Working with persistent volumes.
-
-## How to Use This Repository
-
-1. **Clone the repository to your local machine:**
-    ```bash
-    git clone https://github.com/k0wl0n/kubernetes-course-materials.git
-    ```
-
-2. **Change into a chapter directory to explore the examples and manifests:**
-    ```bash
-    cd kubernetes-course-materials/P2-Ch.04/P2-Ch.04-2-5.Pods
-    ```
-
-3. **Apply the Kubernetes manifests using `kubectl`:**
-    ```bash
-    kubectl apply -f <manifest-file>.yaml
-    ```
-
-4. **Explore and modify the examples as needed for learning and experimentation.**
+Feel free to modify the manifests and use them as a starting point for your own Kubernetes experiments.
 
 ## License
 
-This repository is licensed under the MIT License. See the `LICENSE` file for more information.
+This project is licensed under the MIT License. See the [`LICENSE`](LICENSE) file for details.
 
 ## Contact
 
-For questions or discussions, please open an issue or reach out via this repo.
+Questions or suggestions? Open an issue in this repository.
