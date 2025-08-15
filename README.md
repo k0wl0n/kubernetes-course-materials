@@ -1,12 +1,14 @@
 # Kubernetes Manifest Repository
 
-This repository contains Kubernetes manifests organized by chapter and topics to support learning and understanding of various Kubernetes features and concepts. Each directory contains specific examples and configurations related to the chapter topics.
+This repository contains Kubernetes manifests organized by chapter and topic.
+Each directory includes example configurations that highlight specific Kubernetes features and concepts.
 
-## [All-in-One Package] Docker & Kubernetes: From Containerization to Real-World Applications (ft. AWS EKS)
+## Course: Docker & Kubernetes from Containerization to Real-World Applications (ft. AWS EKS)
 
 🔗 Find the full course here: [Course Link](https://abit.ly/1poqhq)
 
-This course is designed to take you from the basics of containerization to real-world application implementation, including using AWS EKS. It’s the perfect opportunity for anyone looking to develop their DevOps skills and master Kubernetes in a practical and applicable context.
+This course takes you from containerization basics to real-world application implementation with AWS EKS.
+It is ideal for anyone looking to build DevOps skills and master Kubernetes in a practical context.
 
 ### What will you learn?
 
@@ -71,7 +73,7 @@ The repository is organized into several chapters, each focusing on different as
     git clone https://github.com/k0wl0n/kubernetes-course-materials.git
     ```
 
-2. **Navigate to the desired chapter and sub-chapter to explore the examples and manifests:**
+2. **Change into a chapter directory to explore the examples and manifests:**
     ```bash
     cd kubernetes-course-materials/P2-Ch.04/P2-Ch.04-2-5.Pods
     ```
