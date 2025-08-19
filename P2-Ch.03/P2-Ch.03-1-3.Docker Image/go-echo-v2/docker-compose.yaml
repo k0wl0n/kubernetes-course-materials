@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  go-echo-app:
+    image: kowlon/go-echo:v2
+    ports:
+      - "8080:8080"
+    container_name: go-echo-v2
+    restart: unless-stopped
+    networks:
+      - go-echo-network
+
+networks:
+  go-echo-network:
+    driver: bridge
