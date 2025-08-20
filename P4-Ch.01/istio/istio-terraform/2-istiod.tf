@@ -11,25 +11,24 @@ resource "helm_release" "istiod" {
   create_namespace = true
   version          = "1.17.1"
 
-  set {
-    name  = "telemetry.enabled"
-    value = "true"
-  }
-
-  set {
-    name  = "global.istioNamespace"
-    value = "istio-system"
-  }
-
-  set {
-    name  = "meshConfig.ingressService"
-    value = "istio-gateway"
-  }
-
-  set {
-    name  = "meshConfig.ingressSelector"
-    value = "gateway"
-  }
+  set = [
+    {
+      name  = "telemetry.enabled"
+      value = "true"
+    },
+    {
+      name  = "global.istioNamespace"
+      value = "istio-system"
+    },
+    {
+      name  = "meshConfig.ingressService"
+      value = "istio-gateway"
+    },
+    {
+      name  = "meshConfig.ingressSelector"
+      value = "gateway"
+    }
+  ]
 
   depends_on = [helm_release.istio_base]
 }

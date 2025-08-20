@@ -11,8 +11,8 @@ resource "helm_release" "istio_base" {
   create_namespace = true
   version          = "1.17.1"
 
-  set {
+  set = [{
     name  = "global.istioNamespace"
     value = "istio-system"
-  }
+  }]
 }
