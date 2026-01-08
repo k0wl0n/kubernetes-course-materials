@@ -7,6 +7,9 @@ but the examples are free to use for anyone exploring Kubernetes.
 Fast Campus is Korea's leading edutech company with over 930,000 members and
 high-quality online lectures for working professionals in Indonesia and beyond.
 
+- **Course**: [[All-in-One Package] Docker & Kubernetes: From Containerization to Real-World Applications (ft. AWS EKS)](https://fastcampus.com/id/products/dev_online_bedoku)
+- **Instructor**: Wahyu Anggana
+
 ## Contents
 
 Each chapter directory contains YAML manifests that can be applied directly with `kubectl` or

@@ -18,3 +18,9 @@ choco install kubectx
 ### Install kubens
 choco install kubens
 
+### Start Minikube with Specific Kubernetes Version
+By default, Minikube starts the latest supported Kubernetes version. To use a specific version (e.g., v1.30.0), use the `--kubernetes-version` flag:
+
+```bash
+minikube start --kubernetes-version=v1.30.0
+```
